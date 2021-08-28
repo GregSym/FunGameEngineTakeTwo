@@ -1,4 +1,5 @@
 # Import standard modules.
+from models.object import Object
 from models.context import Context
 from typing import Any
 from main_template import AppTemplate
@@ -8,7 +9,7 @@ import sys
 import pygame
 from pygame.locals import *
 
-def pyGameSetup() -> tuple[float, float, Any]:
+def pyGameSetup() -> tuple[int, float, pygame.time.Clock, pygame.Surface]:
     # Initialise PyGame.
   pygame.init()
   
@@ -36,14 +37,22 @@ class MainApp(AppTemplate):
         self.run()
 
     def run(self):
+        self.setup()
         while True:
             self.update()
             self.draw()
-            self.context.clock.tick(self.context.fps)
+            self.context.clock.tick(self.context.fps.__int__())
 
 
 class Engine(MainApp):
-    def update(dt: float):
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def setup(self):
+        self.objects = [Object(context=self.context, has_gravity=True)]
+
+    def update(self):
         """
         Update game. Called once per frame.
         dt is the amount of time passed since last frame.
@@ -65,10 +74,16 @@ class Engine(MainApp):
                 # on other operating systems too, but I don't know for sure.
                 # Handle other events as you wish.
 
+        for object in self.objects:
+            object.update()
+
     def draw(self):
         self.context.screen.fill((0, 255, 0)) # Fill the screen with black.
         
         # Redraw screen here.
+        for object in self.objects:
+            object.context = self.context
+            object.draw()
         
         # Flip the display so that the things we drew actually show up.
         pygame.display.flip()
