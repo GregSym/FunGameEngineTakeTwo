@@ -1,11 +1,17 @@
 
+if __name__=="__main__":
+    from context import Context
+    from object_template import ObjectTemplate
+else:
+    from .context import Context
+    from .object_template import ObjectTemplate
+
+
 from pygame.constants import QUIT
 from pygame.locals import Color
-from .context import Context
 from typing import Tuple
 from pygame import Vector2, Surface
 import pygame
-from .object_template import ObjectTemplate
 
 
 class Object(ObjectTemplate):
