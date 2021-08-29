@@ -1,5 +1,5 @@
 
-if __name__=="__main__":
+if __name__ == "__main__":
     from context import Context
     from object_template import ObjectTemplate
 else:
@@ -15,6 +15,9 @@ import pygame
 
 
 class Object(ObjectTemplate):
+    """
+        Object with methods for setup, update and draw
+    """
     def __init__(self,
                  context: Context,
                  dimensions: Vector2 = Vector2(50, 50),

@@ -1,7 +1,9 @@
 from abc import ABC
 
 class ObjectTemplate(ABC):
-
+    """
+        An abstract base class of the Objects instantiable within the Engine
+    """
     def setup():
         """
             setup the object's initial state
