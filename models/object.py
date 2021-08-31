@@ -2,15 +2,17 @@
 if __name__ == "__main__":
     from context import Context
     from object_template import ObjectTemplate
+    from physics_model_generic import PhysicsModelGeneric
 else:
     from .context import Context
     from .object_template import ObjectTemplate
+    from models.physics_model_generic import PhysicsModelGeneric
 
 
 from pygame.constants import QUIT
 from pygame.locals import Color
 from typing import Tuple
-from pygame import Vector2, Surface
+from pygame import Vector2, Surface, sprite
 import pygame
 
 
@@ -18,22 +20,38 @@ class Object(ObjectTemplate):
     """
         Object with methods for setup, update and draw
     """
+
     def __init__(self,
                  context: Context,
                  dimensions: Vector2 = Vector2(50, 50),
-                 position: Vector2 = Vector2(0, 0),
-                 has_gravity: bool = False) -> None:
+                 physics_model: PhysicsModelGeneric = PhysicsModelGeneric()) -> None:
         super().__init__()
         self.context = context
         self.dimensions = dimensions
         self.sprite = Surface(size=dimensions)
         self.sprite.fill(color=(255, 0, 0))
-        self.position = position
-        self.has_gravity = has_gravity
+        self.position = physics_model.position
+        self.velocity = physics_model.velocity
+        self.has_gravity = physics_model.has_gravity
+        if self.has_gravity:
+            self.acceleration = Vector2(0, .1)
+        else:
+            self.acceleration = Vector2(0, 0)
+
+    def test_collision(self, obj):
+        """
+            manual collision detector, to be privated
+        """
+        if self.position.y + self.dimensions.y >= obj.position.y:
+            # self.acceleration = Vector2(0, 0)
+            self.velocity.y = self.velocity.y * (-.9)
 
     def update(self):
         if self.has_gravity:
-            self.position.y += 1
+            # do the gravity
+            # self.acceleration = Vector2(0, .1)
+            self.velocity += self.acceleration
+            self.position += self.velocity
 
     def draw(self):
         self.context.screen.blit(self.sprite, dest=(

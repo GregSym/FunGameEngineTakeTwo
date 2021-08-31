@@ -1,47 +1,54 @@
 # Import standard modules.
+from models.physics_model_generic import PhysicsModelGeneric
+from pygame.math import Vector2
+from models.floor import Floor
 from models.object import Object
-from models.context import Context
+from models.context import Context, SurfaceInfo
 from typing import Any
 from main_template import AppTemplate
 import sys
- 
+
 # Import non-standard modules.
 import pygame
 from pygame.locals import *
 
+
 def pyGameSetup() -> tuple[int, float, pygame.time.Clock, pygame.Surface]:
     # Initialise PyGame.
-  pygame.init()
-  
-  # Set up the clock. This will tick every frame and thus maintain a relatively constant framerate. Hopefully.
-  fps = 144
-  fpsClock = pygame.time.Clock()
-  
-  # Set up the window.
-  width, height = 640, 480
-  screen = pygame.display.set_mode((width, height))
-  
-  # screen is the surface representing the window.
-  # PyGame surfaces can be thought of as screen sections that you can draw onto.
-  # You can also draw surfaces onto other surfaces, rotate surfaces, and transform surfaces.
-  
-  # Main game loop.
-  dt: float = 1/fps # dt is the time since last frame.
-  return dt, fps, fpsClock, screen
+    pygame.init()
+
+    # Set up the clock. This will tick every frame and thus maintain a relatively constant framerate. Hopefully.
+    fps = 144
+    fpsClock = pygame.time.Clock()
+
+    # Set up the window.
+    width, height = 640, 480
+    screen = pygame.display.set_mode((width, height))
+
+    # screen is the surface representing the window.
+    # PyGame surfaces can be thought of as screen sections that you can draw onto.
+    # You can also draw surfaces onto other surfaces, rotate surfaces, and transform surfaces.
+
+    # Main game loop.
+    dt: float = 1/fps  # dt is the time since last frame.
+    return dt, fps, fpsClock, screen
+
 
 class MainApp(AppTemplate):
     def __init__(self) -> None:
         super().__init__()
-        fps, dt, clock, screen = pyGameSetup()
-        self.context: Context = Context(fps=fps, dt=dt, clock=clock, screen=screen)
+        dt, fps, clock, screen = pyGameSetup()
+        self.context: Context = Context(
+            fps=fps, dt=dt, clock=clock, screen=screen, surface_info=SurfaceInfo(width=640, height=480))
         self.run()
 
     def run(self):
         self.setup()
+        print(f"fps is:", self.context.fps)
         while True:
             self.update()
             self.draw()
-            self.context.clock.tick(self.context.fps.__int__())
+            self.context.clock.tick(self.context.fps)
 
 
 class Engine(MainApp):
@@ -50,7 +57,8 @@ class Engine(MainApp):
         super().__init__()
 
     def setup(self):
-        self.objects = [Object(context=self.context, has_gravity=True)]
+        self.objects = [Object(context=self.context, physics_model=PhysicsModelGeneric(has_gravity=True)), Floor(
+            context=self.context, physics_model=PhysicsModelGeneric(position=Vector2(0, 300)))]
 
     def update(self):
         """
@@ -58,9 +66,9 @@ class Engine(MainApp):
         dt is the amount of time passed since last frame.
         If you want to have constant apparent movement no matter your framerate,
         what you can do is something like
-        
+
         x += v * dt
-        
+
         and this will scale your velocity based on time. Extend as necessary.
         """
         # Go through events that are passed to the script by the window.
@@ -69,24 +77,27 @@ class Engine(MainApp):
             # about is the QUIT event, because if you don't handle it, your game will crash
             # whenever someone tries to exit.
             if event.type == QUIT:
-                pygame.quit() # Opposite of pygame.init
-                sys.exit() # Not including this line crashes the script on Windows. Possibly
+                pygame.quit()  # Opposite of pygame.init
+                sys.exit()  # Not including this line crashes the script on Windows. Possibly
                 # on other operating systems too, but I don't know for sure.
                 # Handle other events as you wish.
 
         for object in self.objects:
             object.update()
 
+        self.objects[0].test_collision(self.objects[1])
+
     def draw(self):
-        self.context.screen.fill((0, 255, 0)) # Fill the screen with black.
-        
+        self.context.screen.fill((0, 255, 0))  # Fill the screen with black.
+
         # Redraw screen here.
         for object in self.objects:
             object.context = self.context
             object.draw()
-        
+
         # Flip the display so that the things we drew actually show up.
         pygame.display.flip()
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     Engine()
