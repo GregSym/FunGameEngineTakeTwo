@@ -1,4 +1,5 @@
 # Import standard modules.
+from src.player import Player
 from src.settings.settings import Settings
 from src.physics_model_generic import PhysicsModelGeneric
 from pygame.math import Vector2
@@ -76,7 +77,8 @@ class Engine(MainApp):
         and this will scale your velocity based on time. Extend as necessary.
         """
         # Go through events that are passed to the script by the window.
-        for event in pygame.event.get():
+        self.context.events = pygame.event.get()
+        for event in self.context.events:
             # We need to handle these events. Initially the only one you'll want to care
             # about is the QUIT event, because if you don't handle it, your game will crash
             # whenever someone tries to exit.
@@ -86,13 +88,18 @@ class Engine(MainApp):
                 # on other operating systems too, but I don't know for sure.
                 # Handle other events as you wish.
             if event.type == pygame.MOUSEBUTTONUP:
-                self.objects.append(Object(context=self.context, physics_model=PhysicsModelGeneric(
+                self.objects.append(Player(context=self.context, physics_model=PhysicsModelGeneric(
                     position=Vector2(mouse.get_pos()), velocity=Vector2(0, 0), has_gravity=True)))
 
         for object in self.objects:
-            object.update()
-            if type(object) == Object:
+            if type(object) == Player:
                 object.test_collision(self.objects[1])
+                object.update()
+            elif type(object) == Object:
+                object.test_collision(self.objects[1])
+                object.update()
+            else:
+                object.update()
 
         # self.objects[0].test_collision(self.objects[1])
 

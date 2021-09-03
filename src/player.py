@@ -12,6 +12,7 @@ else:
     from .physics_model_generic import PhysicsModelGeneric
     from .constants.colours import Colours
 
+from src.player_controller import PlayerController
 from pygame import Vector2, event
 import pygame
 
@@ -24,17 +25,8 @@ class Player(Object):
         super().__init__(context, dimensions=dimensions, physics_model=physics_model)
         self.sprite.fill(color=Colours.blue)
         self.max_velocity = 500
+        self.controller = PlayerController(context=self.context, physics_model=self.physics_model)
 
-    def update(self, events: list[event.Event]):
+    def update(self):
         super().update()
-        for event in events:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_a:
-                    if abs(self.velocity.x) <= 500:
-                        self.acceleration.x -= 500
-                    else:
-                        self.acceleration.x = 0
-
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_a:
-                    self.reset()
+        self.controller.get_events()

@@ -1,11 +1,11 @@
 
 if __name__ == "__main__":
     from context import Context, SurfaceInfo
-    from object_template import ObjectTemplate
+    from templates.object_template import ObjectTemplate
     from physics_model_generic import PhysicsModelGeneric
 else:
     from .context import Context, SurfaceInfo
-    from .object_template import ObjectTemplate
+    from .templates.object_template import ObjectTemplate
     from .physics_model_generic import PhysicsModelGeneric
 
 
@@ -31,38 +31,35 @@ class Object(ObjectTemplate):
         self.sprite = Surface(size=dimensions)
         self.sprite.fill(color=(255, 0, 0))
         self.physics_model = physics_model
-        self.position = physics_model.position
-        self.velocity = physics_model.velocity
-        self.has_gravity = physics_model.has_gravity
-        if self.has_gravity:
-            self.acceleration = Vector2(0, 300)
+        if self.physics_model.has_gravity:
+            self.physics_model.acceleration = Vector2(0, 300)
         else:
-            self.acceleration = Vector2(0, 0)
+            self.physics_model.acceleration = Vector2(0, 0)
 
     def test_collision(self, obj):
         """
             manual collision detector, to be privated
         """
-        if self.position.y + self.dimensions.y >= obj.position.y:
+        if self.physics_model.position.y + self.dimensions.y >= obj.physics_model.position.y:
             # self.acceleration = Vector2(0, 0)
             if self.physics_model.smooth_physics:
-                if self.acceleration.y >= self.velocity.y:
-                    self.velocity.y = 0
+                if self.physics_model.acceleration.y >= self.physics_model.velocity.y:
+                    self.physics_model.velocity.y = 0
                 else:
-                    self.velocity.y = self.velocity.y * (-.9)
+                    self.physics_model.velocity.y = self.physics_model.velocity.y * (-.9)
             else:
-                self.velocity.y = self.velocity.y * (-.9)
+                self.physics_model.velocity.y = self.physics_model.velocity.y * (-.9)
 
     def update(self):
-        if self.has_gravity:
+        if self.physics_model.has_gravity:
             # do the gravity
             # self.acceleration = Vector2(0, .1)
-            self.position += self.velocity * self.context.dt
-            self.velocity += self.acceleration * self.context.dt
+            self.physics_model.position += self.physics_model.velocity * self.context.dt
+            self.physics_model.velocity += self.physics_model.acceleration * self.context.dt
 
     def draw(self):
         self.context.screen.blit(self.sprite, dest=(
-            self.position.x, self.position.y, self.dimensions.x, self.dimensions.y))
+            self.physics_model.position.x, self.physics_model.position.y, self.dimensions.x, self.dimensions.y))
 
     def reset(self, hard_reset: bool = False):
         self.acceleration = Vector2(0, 0)
