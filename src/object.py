@@ -1,12 +1,12 @@
 
 if __name__ == "__main__":
-    from context import Context
+    from context import Context, SurfaceInfo
     from object_template import ObjectTemplate
     from physics_model_generic import PhysicsModelGeneric
 else:
-    from .context import Context
+    from .context import Context, SurfaceInfo
     from .object_template import ObjectTemplate
-    from models.physics_model_generic import PhysicsModelGeneric
+    from .physics_model_generic import PhysicsModelGeneric
 
 
 from pygame.constants import QUIT
@@ -30,11 +30,12 @@ class Object(ObjectTemplate):
         self.dimensions = dimensions
         self.sprite = Surface(size=dimensions)
         self.sprite.fill(color=(255, 0, 0))
+        self.physics_model = physics_model
         self.position = physics_model.position
         self.velocity = physics_model.velocity
         self.has_gravity = physics_model.has_gravity
         if self.has_gravity:
-            self.acceleration = Vector2(0, 100)
+            self.acceleration = Vector2(0, 300)
         else:
             self.acceleration = Vector2(0, 0)
 
@@ -44,7 +45,13 @@ class Object(ObjectTemplate):
         """
         if self.position.y + self.dimensions.y >= obj.position.y:
             # self.acceleration = Vector2(0, 0)
-            self.velocity.y = self.velocity.y * (-.9)
+            if self.physics_model.smooth_physics:
+                if self.acceleration.y >= self.velocity.y:
+                    self.velocity.y = 0
+                else:
+                    self.velocity.y = self.velocity.y * (-.9)
+            else:
+                self.velocity.y = self.velocity.y * (-.9)
 
     def update(self):
         if self.has_gravity:
@@ -75,9 +82,10 @@ if __name__ == "__main__":
 
     # Main game loop.
     dt = 1/fps  # dt is the time since last frame.
-    context = Context(fps=fps, dt=dt, clock=fpsClock, screen=screen)
+    context = Context(fps=fps, dt=dt, clock=fpsClock,
+                      screen=screen, surface_info=SurfaceInfo(width, height))
 
-    test_object = Object(context=context)
+    test_object = Object(context=context, physics_model=PhysicsModelGeneric())
 
     while True:
         for event in pygame.event.get():

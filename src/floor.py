@@ -6,7 +6,7 @@ if __name__ == "__main__":
 else:
     from .object import Object
     from .context import Context
-    from models.physics_model_generic import PhysicsModelGeneric
+    from .physics_model_generic import PhysicsModelGeneric
 
 
 class Floor(Object):

@@ -1,8 +1,5 @@
 import dataclasses
-if __name__=="__main__":
-    from object_template import ObjectTemplate
-else:
-    from models.object_template import ObjectTemplate
+
 from typing import Any
 
 from pygame.time import Clock

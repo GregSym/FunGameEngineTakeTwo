@@ -1,9 +1,10 @@
 # Import standard modules.
-from models.physics_model_generic import PhysicsModelGeneric
+from src.settings.settings import Settings
+from src.physics_model_generic import PhysicsModelGeneric
 from pygame.math import Vector2
-from models.floor import Floor
-from models.object import Object
-from models.context import Context, SurfaceInfo
+from src.floor import Floor
+from src.object import Object
+from src.context import Context, SurfaceInfo
 from typing import Any
 from main_template import AppTemplate
 import sys
@@ -19,11 +20,11 @@ def pyGameSetup() -> tuple[int, float, pygame.time.Clock, pygame.Surface]:
     pygame.init()
 
     # Set up the clock. This will tick every frame and thus maintain a relatively constant framerate. Hopefully.
-    fps = 144
+    fps = Settings.fps
     fpsClock = pygame.time.Clock()
 
     # Set up the window.
-    width, height = 640, 480
+    width, height = Settings.resolution
     screen = pygame.display.set_mode((width, height))
 
     # screen is the surface representing the window.
@@ -31,7 +32,7 @@ def pyGameSetup() -> tuple[int, float, pygame.time.Clock, pygame.Surface]:
     # You can also draw surfaces onto other surfaces, rotate surfaces, and transform surfaces.
 
     # Main game loop.
-    dt: float = 1/fps  # dt is the time since last frame.
+    dt: float = Settings.dt  # dt is the time since last frame.
     return dt, fps, fpsClock, screen
 
 
@@ -100,7 +101,7 @@ class Engine(MainApp):
 
         # Redraw screen here.
         for object in self.objects:
-            object.context = self.context
+            #object.context = self.context
             object.draw()
 
         # Flip the display so that the things we drew actually show up.
