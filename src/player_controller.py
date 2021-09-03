@@ -43,8 +43,14 @@ class PlayerController(ControllerTemplate):
         self.key_map = key_map
         self.move_left = KeyAction(key_down=lambda: self.__move_horizontal_keydown(
             direction='left'), key_up=lambda: self.__move_horizontal_keyup(direction='left'))
+        """
+            packages both keyup and keydown handlers
+        """
         self.move_right = KeyAction(key_down=lambda: self.__move_horizontal_keydown(
             direction='right'), key_up=lambda: self.__move_horizontal_keyup(direction='right'))
+        """
+            packages both keyup and keydown handlers
+        """
 
     def __reset_physics_x(self):
         self.physics_model.velocity.x = 0

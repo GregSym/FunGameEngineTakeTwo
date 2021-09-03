@@ -25,7 +25,7 @@ class Player(Object):
         super().__init__(context, dimensions=dimensions, physics_model=physics_model)
         self.sprite.fill(color=Colours.blue)
         self.max_velocity = 500
-        self.controller = PlayerController(context=self.context, physics_model=self.physics_model)
+        self.controller = PlayerController(context=self.context, physics_model=self.physics_model) # set a controller
 
     def update(self):
         super().update()
