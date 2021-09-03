@@ -64,6 +64,10 @@ class Object(ObjectTemplate):
         self.context.screen.blit(self.sprite, dest=(
             self.position.x, self.position.y, self.dimensions.x, self.dimensions.y))
 
+    def reset(self, hard_reset: bool = False):
+        self.acceleration = Vector2(0, 0)
+        self.velocity = Vector2(0, 0)
+
 
 if __name__ == "__main__":
     import sys

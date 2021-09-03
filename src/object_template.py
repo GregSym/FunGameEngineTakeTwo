@@ -19,3 +19,8 @@ class ObjectTemplate(ABC):
         """
             Draw the latest version of the object's state
         """
+
+    def reset():
+        """
+            Reset the object parameters to default
+        """
