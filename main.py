@@ -11,6 +11,7 @@ import sys
 # Import non-standard modules.
 import pygame
 from pygame.locals import *
+from pygame import mouse
 
 
 def pyGameSetup() -> tuple[int, float, pygame.time.Clock, pygame.Surface]:
@@ -48,7 +49,9 @@ class MainApp(AppTemplate):
         while True:
             self.update()
             self.draw()
-            self.context.dt = self.context.clock.tick(self.context.fps) / 1000 # NOTE: .tick method returns milliseconds, hence /1000
+            # NOTE: .tick method returns milliseconds, hence /1000
+            self.context.dt = self.context.clock.tick(self.context.fps) / 1000
+            print("dt is:", self.context.dt)
 
 
 class Engine(MainApp):
@@ -81,11 +84,16 @@ class Engine(MainApp):
                 sys.exit()  # Not including this line crashes the script on Windows. Possibly
                 # on other operating systems too, but I don't know for sure.
                 # Handle other events as you wish.
+            if event.type == pygame.MOUSEBUTTONUP:
+                self.objects.append(Object(context=self.context, physics_model=PhysicsModelGeneric(
+                    position=Vector2(mouse.get_pos()), velocity=Vector2(0, 0), has_gravity=True)))
 
         for object in self.objects:
             object.update()
+            if type(object) == Object:
+                object.test_collision(self.objects[1])
 
-        self.objects[0].test_collision(self.objects[1])
+        # self.objects[0].test_collision(self.objects[1])
 
     def draw(self):
         self.context.screen.fill((0, 255, 0))  # Fill the screen with black.
