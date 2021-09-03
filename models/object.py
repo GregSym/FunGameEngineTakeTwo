@@ -34,7 +34,7 @@ class Object(ObjectTemplate):
         self.velocity = physics_model.velocity
         self.has_gravity = physics_model.has_gravity
         if self.has_gravity:
-            self.acceleration = Vector2(0, .1)
+            self.acceleration = Vector2(0, 100)
         else:
             self.acceleration = Vector2(0, 0)
 
@@ -50,8 +50,8 @@ class Object(ObjectTemplate):
         if self.has_gravity:
             # do the gravity
             # self.acceleration = Vector2(0, .1)
-            self.velocity += self.acceleration
-            self.position += self.velocity
+            self.position += self.velocity * self.context.dt
+            self.velocity += self.acceleration * self.context.dt
 
     def draw(self):
         self.context.screen.blit(self.sprite, dest=(

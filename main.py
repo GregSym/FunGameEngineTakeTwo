@@ -48,7 +48,7 @@ class MainApp(AppTemplate):
         while True:
             self.update()
             self.draw()
-            self.context.clock.tick(self.context.fps)
+            self.context.dt = self.context.clock.tick(self.context.fps) / 1000 # NOTE: .tick method returns milliseconds, hence /1000
 
 
 class Engine(MainApp):
