@@ -1,4 +1,7 @@
-
+"""
+    File for storing relevant settings in a dataclass
+    - might expose in an .config at some point?
+"""
 from dataclasses import dataclass
 
 @dataclass
