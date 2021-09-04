@@ -7,8 +7,8 @@ from pygame.math import Vector2
 from src.floor import Floor
 from src.object import Object
 from src.context import Context, SurfaceInfo
+from src.templates.main_template import AppTemplate
 from typing import Any
-from main_template import AppTemplate
 import sys
 
 # Import non-standard modules.
