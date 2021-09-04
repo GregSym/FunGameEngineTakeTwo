@@ -28,6 +28,16 @@ class KeyMap:
     right = pygame.K_d
     jump = pygame.K_SPACE
 
+@dataclass
+class ControllerState:
+    """
+        Container for the state of a controller
+    """
+    is_moving: bool = False
+    is_moving_left: bool = False
+    is_moving_right: bool = False
+    is_jumping: bool = False
+    is_grounded: bool = False
 
 class PlayerController(ControllerTemplate):
     """
@@ -39,8 +49,9 @@ class PlayerController(ControllerTemplate):
         self.context = context
         self.physics_model = physics_model
         self.max_velocity_x = max_velocity_x
-        self.acceleration_chunk = 200
+        self.acceleration_chunk = 20000
         self.key_map = key_map
+        self.state = ControllerState()
         self.move_left = KeyAction(key_down=lambda: self.__move_horizontal_keydown(
             direction='left'), key_up=lambda: self.__move_horizontal_keyup(direction='left'))
         """
@@ -55,6 +66,7 @@ class PlayerController(ControllerTemplate):
     def __reset_physics_x(self):
         self.physics_model.velocity.x = 0
         self.physics_model.acceleration.x = 0
+        self.state.is_moving = False
 
     def __set_direction(self, direction: str):
         if direction == 'left':
@@ -63,9 +75,10 @@ class PlayerController(ControllerTemplate):
             return self.acceleration_chunk
 
     def __move_horizontal_keydown(self, direction: str):
+        self.state.is_moving = True
         acceleration_chunk = self.__set_direction(direction=direction)
-        if self.physics_model.velocity.x <= self.max_velocity_x:
-            self.physics_model.acceleration.x += acceleration_chunk
+        if abs(self.physics_model.velocity.x) <= self.max_velocity_x:
+            self.physics_model.acceleration.x += acceleration_chunk * self.context.dt
         else:
             self.physics_model.acceleration.x = 0
 

@@ -1,4 +1,5 @@
 # Import standard modules.
+from pygame import event
 from src.player import Player
 from src.settings.settings import Settings
 from src.physics_model_generic import PhysicsModelGeneric
@@ -42,7 +43,7 @@ class MainApp(AppTemplate):
         super().__init__()
         dt, fps, clock, screen = pyGameSetup()
         self.context: Context = Context(
-            fps=fps, dt=dt, clock=clock, screen=screen, surface_info=SurfaceInfo(width=640, height=480))
+            fps=fps, dt=dt, clock=clock, screen=screen, surface_info=SurfaceInfo(width=640, height=480), events=event.get())
         self.run()
 
     def run(self):
@@ -53,7 +54,6 @@ class MainApp(AppTemplate):
             self.draw()
             # NOTE: .tick method returns milliseconds, hence /1000
             self.context.dt = self.context.clock.tick(self.context.fps) / 1000
-            print("dt is:", self.context.dt)
 
 
 class Engine(MainApp):
