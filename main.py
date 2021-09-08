@@ -1,4 +1,5 @@
 # Import standard modules.
+from src.settings.setup import pyGameSetup
 from pygame import event
 from src.player import Player
 from src.settings.settings import Settings
@@ -15,27 +16,6 @@ import sys
 import pygame
 from pygame.locals import *
 from pygame import mouse
-
-
-def pyGameSetup() -> tuple[int, float, pygame.time.Clock, pygame.Surface]:
-    # Initialise PyGame.
-    pygame.init()
-
-    # Set up the clock. This will tick every frame and thus maintain a relatively constant framerate. Hopefully.
-    fps = Settings.fps
-    fpsClock = pygame.time.Clock()
-
-    # Set up the window.
-    width, height = Settings.resolution
-    screen = pygame.display.set_mode((width, height))
-
-    # screen is the surface representing the window.
-    # PyGame surfaces can be thought of as screen sections that you can draw onto.
-    # You can also draw surfaces onto other surfaces, rotate surfaces, and transform surfaces.
-
-    # Main game loop.
-    dt: float = Settings.dt  # dt is the time since last frame.
-    return dt, fps, fpsClock, screen
 
 
 class MainApp(AppTemplate):
@@ -68,13 +48,6 @@ class Engine(MainApp):
     def update(self):
         """
         Update game. Called once per frame.
-        dt is the amount of time passed since last frame.
-        If you want to have constant apparent movement no matter your framerate,
-        what you can do is something like
-
-        x += v * dt
-
-        and this will scale your velocity based on time. Extend as necessary.
         """
         # Go through events that are passed to the script by the window.
         self.context.events = pygame.event.get()
@@ -114,6 +87,10 @@ class Engine(MainApp):
         # Flip the display so that the things we drew actually show up.
         pygame.display.flip()
 
+def main():
+    """ Main functionality of the app """
+    Engine() # init and run engine - engine is currently run from the constructor/init method
+    # those aren't the same thing but, like, whatevs
 
 if __name__ == "__main__":
-    Engine()
+    main()

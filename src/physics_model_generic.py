@@ -7,7 +7,7 @@ from pygame import Vector2
 class PhysicsModelGeneric:
     """
         Super-basic, generic physics model
-        - pos @ origin, no velocity, no gravity
+        - pos @ origin, no velocity, no gravity/horizontal acc.
     """
     position: Vector2 = Vector2(0, 0)
     """ Position of the top left-hand corner of the associated sprite """
