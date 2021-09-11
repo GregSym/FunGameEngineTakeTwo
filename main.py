@@ -34,6 +34,7 @@ class MainApp(AppTemplate):
             self.draw()
             # NOTE: .tick method returns milliseconds, hence /1000
             self.context.dt = self.context.clock.tick(self.context.fps) / 1000
+            print(self.context.dt)
 
 
 class Engine(MainApp):
@@ -52,14 +53,10 @@ class Engine(MainApp):
         # Go through events that are passed to the script by the window.
         self.context.events = pygame.event.get()
         for event in self.context.events:
-            # We need to handle these events. Initially the only one you'll want to care
-            # about is the QUIT event, because if you don't handle it, your game will crash
-            # whenever someone tries to exit.
             if event.type == QUIT:
                 pygame.quit()  # Opposite of pygame.init
                 sys.exit()  # Not including this line crashes the script on Windows. Possibly
-                # on other operating systems too, but I don't know for sure.
-                # Handle other events as you wish.
+                # on other operating systems too, but I don't know for sure. - note from template
             if event.type == pygame.MOUSEBUTTONUP:
                 self.objects.append(Player(context=self.context, physics_model=PhysicsModelGeneric(
                     position=Vector2(mouse.get_pos()), velocity=Vector2(0, 0), has_gravity=True)))

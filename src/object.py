@@ -51,11 +51,7 @@ class Object(ObjectTemplate):
                 self.physics_model.velocity.y = self.physics_model.velocity.y * (-.9)
 
     def update(self):
-        if self.physics_model.has_gravity:
-            # do the gravity
-            # self.acceleration = Vector2(0, .1)
-            self.physics_model.position += self.physics_model.velocity * self.context.dt
-            self.physics_model.velocity += self.physics_model.acceleration * self.context.dt
+        self.physics_model.gravity_update(dt=self.context.dt)
 
     def draw(self):
         self.context.screen.blit(self.sprite, dest=(

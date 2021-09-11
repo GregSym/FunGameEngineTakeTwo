@@ -1,5 +1,5 @@
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pygame import Vector2
 
 
@@ -16,3 +16,12 @@ class PhysicsModelGeneric:
     has_gravity: bool = False
     smooth_physics: bool = True
     """ smooths off the phsx bouncing effects """
+
+    def gravity_update(self, dt: float):
+        if self.has_gravity:
+            self.position += self.velocity * dt
+            self.velocity += self.acceleration * dt
+
+
+if __name__=="__main__":
+    print(asdict(PhysicsModelGeneric()))
