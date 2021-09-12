@@ -18,15 +18,15 @@ else:
 from pygame.constants import QUIT
 from pygame.locals import Color
 from typing import Any, Tuple
-from pygame import Vector2, Surface, math, sprite
+from pygame import Vector2, Surface, sprite
 import pygame
+import numpy as np
 
 
 class Object(ObjectTemplate):
     """
         Object with methods for setup, update and draw
     """
-    collision: Any
 
     def __init__(self,
                  context: Context,
@@ -35,15 +35,14 @@ class Object(ObjectTemplate):
         super().__init__()
         self.context = context
         self.dimensions = dimensions
+        self.physics_model = physics_model
         self.sprite = Surface(size=dimensions)
         self.sprite.fill(color=(255, 0, 0))
-        self.physics_model = physics_model
+        self.rect = self.sprite.get_rect(topleft=(self.physics_model.position))
         if self.physics_model.has_gravity:
             self.physics_model.acceleration = Vector2(0, 300)
         else:
             self.physics_model.acceleration = Vector2(0, 0)
-
-    
 
     def test_collision(self, obj):
         """
@@ -59,10 +58,30 @@ class Object(ObjectTemplate):
                 self.physics_model.velocity.y = 0
             else:
                 self.physics_model.velocity.y = self.physics_model.velocity.y * \
-                        (-.9)
+                    (-.9)
         else:
             self.physics_model.velocity.y = self.physics_model.velocity.y * \
-                    (-.9)
+                (-.9)
+
+    def set_collision(self, collision: Any):
+        if __name__ == "__main__":
+            from scene import CollisionInfo
+        else:
+            try:
+                from .scene import CollisionInfo
+            except ImportError:
+                from scene import CollisionInfo
+        if collision.index != -1:
+            self.collision: CollisionInfo = collision
+
+    def __collision_info_import(self):
+        if __name__ == "__main__":
+            from scene import CollisionInfo
+        else:
+            try:
+                from .scene import CollisionInfo
+            except ImportError:
+                from scene import CollisionInfo
 
     def handle_collision(self):
         if __name__ == "__main__":
@@ -72,25 +91,30 @@ class Object(ObjectTemplate):
                 from .scene import CollisionInfo
             except ImportError:
                 from scene import CollisionInfo
-        def __basic_vertical_collision(self: Object, collision: CollisionInfo):
-            if collision.angle==math.pi / 2 or collision.angle == math.pi * 3 / 2:
-                self.__vertical_bounce()
-                self.collision = None
 
-        if self.collision:
+        def __basic_vertical_collision(self: Object, collision: CollisionInfo):
+            if collision.angle == np.pi / 2 or collision.angle == np.pi * 3 / 2:
+                self.__vertical_bounce()
+                self.collision = CollisionInfo(object=self, index=-1, angle=0)
+
+        if hasattr(self, 'collision') and self.collision.index != -1:
             __basic_vertical_collision(self=self, collision=self.collision)
 
     def update(self):
-        self.handle_collision()
+        if hasattr(self, 'collision'):
+            self.handle_collision()
         self.physics_model.gravity_update(dt=self.context.dt)
 
     def draw(self):
+        self.rect.update(self.physics_model.position.x, self.physics_model.position.y, self.dimensions.x, self.dimensions.y)
         self.context.screen.blit(self.sprite, dest=(
             self.physics_model.position.x, self.physics_model.position.y, self.dimensions.x, self.dimensions.y))
 
     def reset(self, hard_reset: bool = False):
-        self.acceleration = Vector2(0, 0)
-        self.velocity = Vector2(0, 0)
+        self.physics_model.acceleration = Vector2(0, 0)
+        self.physics_model.velocity = Vector2(0, 0)
+        if hard_reset:
+            self.physics_model.position = Vector2(0, 0)
 
 
 if __name__ == "__main__":

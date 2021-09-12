@@ -19,12 +19,16 @@ else:
         from floor import Floor
 
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Callable
 
 
 @dataclass
 class Layer:
+    id: str
     objects: list[Object]
+    has_collision: bool = False
+    collides_with: list[str] = field(default_factory=lambda: [])
 
 
 @dataclass
@@ -43,7 +47,7 @@ class Scene(SceneTemplate):
         come from anymore
     """
 
-    layers: list[Layer]
+    layers: list[Layer] = []
 
     def default_setup(self, context: Context):
         env_layer = Layer([Floor(context=context)])
@@ -51,17 +55,51 @@ class Scene(SceneTemplate):
             env_layer
         )
 
+    def layer_interaction(self):
+        for layer in self.layers:
+            if layer.has_collision:
+                target_layers = []
+                for target_name in layer.collides_with:
+                    target_layers.append(
+                        [lay for lay in self.layers if lay.id == target_name][0])
+                for item in layer.objects:
+                    for lay in target_layers:
+                        self.handle_collisions(obj=item, lay=lay)
+
     def handle_collisions(self, obj: Object, lay: Layer):
-        collision_indeces = obj.sprite.get_rect().collidelist(
-            [object.sprite.get_rect() for object in lay.objects])
+        collision_indeces = obj.rect.collidelist(
+            [object.rect for object in lay.objects])
         print(collision_indeces)
         angle = PhysxCalculations.determineSide(
-            obj, lay.objects[collision_indeces])  # not a good way to call that
+            obj.rect, lay.objects[collision_indeces].rect)  # not a good way to call that
+        obj.set_collision(
+            collision=CollisionInfo(
+                object=lay.objects[collision_indeces],
+                index=collision_indeces,
+                angle=angle
+            )
+        )
         return CollisionInfo(
             object=lay.objects[collision_indeces],
             index=collision_indeces,
             angle=angle
         )
+
+    def update(self):
+        self.layer_interaction()
+        for layer in self.layers:
+            for object in layer.objects:
+                object.update()
+
+    def draw(self):
+        for layer in self.layers:
+            for object in layer.objects:
+                object.draw()
+
+    def __for_every_object(self, func: Callable):
+        for layer in self.layers:
+            for object in layer.objects:
+                func()
 
 
 test_scene = Scene()
