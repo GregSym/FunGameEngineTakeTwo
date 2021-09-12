@@ -8,17 +8,17 @@ else:
         from .context import Context, SurfaceInfo
         from .templates.object_template import ObjectTemplate
         from .physics_model_generic import PhysicsModelGeneric
+
     except ImportError:
         from context import Context, SurfaceInfo
         from templates.object_template import ObjectTemplate
         from physics_model_generic import PhysicsModelGeneric
 
 
-
 from pygame.constants import QUIT
 from pygame.locals import Color
-from typing import Tuple
-from pygame import Vector2, Surface, sprite
+from typing import Any, Tuple
+from pygame import Vector2, Surface, math, sprite
 import pygame
 
 
@@ -26,6 +26,7 @@ class Object(ObjectTemplate):
     """
         Object with methods for setup, update and draw
     """
+    collision: Any
 
     def __init__(self,
                  context: Context,
@@ -42,21 +43,45 @@ class Object(ObjectTemplate):
         else:
             self.physics_model.acceleration = Vector2(0, 0)
 
+    
+
     def test_collision(self, obj):
         """
             manual collision detector, to be privated
         """
         if self.physics_model.position.y + self.dimensions.y >= obj.physics_model.position.y:
             # self.acceleration = Vector2(0, 0)
-            if self.physics_model.smooth_physics:
-                if self.physics_model.acceleration.y >= self.physics_model.velocity.y:
-                    self.physics_model.velocity.y = 0
-                else:
-                    self.physics_model.velocity.y = self.physics_model.velocity.y * (-.9)
+            self.__vertical_bounce()
+
+    def __vertical_bounce(self):
+        if self.physics_model.smooth_physics:
+            if self.physics_model.acceleration.y >= self.physics_model.velocity.y:
+                self.physics_model.velocity.y = 0
             else:
-                self.physics_model.velocity.y = self.physics_model.velocity.y * (-.9)
+                self.physics_model.velocity.y = self.physics_model.velocity.y * \
+                        (-.9)
+        else:
+            self.physics_model.velocity.y = self.physics_model.velocity.y * \
+                    (-.9)
+
+    def handle_collision(self):
+        if __name__ == "__main__":
+            from scene import CollisionInfo
+        else:
+            try:
+                from .scene import CollisionInfo
+            except ImportError:
+                from scene import CollisionInfo
+        def __basic_vertical_collision(self: Object, collision: CollisionInfo):
+            if collision.angle==math.pi / 2 or collision.angle == math.pi * 3 / 2:
+                self.__vertical_bounce()
+                self.collision = None
+
+        if self.collision:
+            __basic_vertical_collision(self=self, collision=self.collision)
 
     def update(self):
+        self.handle_collision()
         self.physics_model.gravity_update(dt=self.context.dt)
 
     def draw(self):

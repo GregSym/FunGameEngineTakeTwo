@@ -5,11 +5,19 @@ if __name__ == "__main__":
     from object import Object
     from floor import Floor
 else:
-    from .templates.scene_template import SceneTemplate
-    from .functions.direction import PhysxCalculations
-    from .context import Context
-    from .object import Object
-    from .floor import Floor
+    try:
+        from .templates.scene_template import SceneTemplate
+        from .functions.direction import PhysxCalculations
+        from .context import Context
+        from .object import Object
+        from .floor import Floor
+    except ImportError:
+        from templates.scene_template import SceneTemplate
+        from functions.direction import PhysxCalculations
+        from context import Context
+        from object import Object
+        from floor import Floor
+
 
 from dataclasses import dataclass
 
@@ -38,7 +46,10 @@ class Scene(SceneTemplate):
     layers: list[Layer]
 
     def default_setup(self, context: Context):
-        self.layers.append(Layer([Floor(context=context)]))
+        env_layer = Layer([Floor(context=context)])
+        self.layers.append(
+            env_layer
+        )
 
     def handle_collisions(self, obj: Object, lay: Layer):
         collision_indeces = obj.sprite.get_rect().collidelist(

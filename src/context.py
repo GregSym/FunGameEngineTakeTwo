@@ -37,8 +37,8 @@ class Context:
     clock: Clock
     screen: Surface
     surface_info: SurfaceInfo
-    events: list[event.Event]
-    actions: list[Action]
+    events: list[event.Event] = dataclasses.field(default_factory=lambda: [])
+    actions: list[Action] = dataclasses.field(default_factory=lambda: [])
 
     def add_action(self, action: Action):
         """ Adds an actions to the context.actions list to be executed as instructed as part of the event loop """
