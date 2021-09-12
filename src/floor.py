@@ -4,9 +4,15 @@ if __name__ == "__main__":
     from context import Context
     from physics_model_generic import PhysicsModelGeneric
 else:
-    from .object import Object
-    from .context import Context
-    from .physics_model_generic import PhysicsModelGeneric
+    try:
+        from .object import Object
+        from .context import Context
+        from .physics_model_generic import PhysicsModelGeneric
+    except ImportError:
+        from object import Object
+        from context import Context
+        from physics_model_generic import PhysicsModelGeneric
+
 
 
 class Floor(Object):

@@ -1,14 +1,12 @@
 if __name__ == "__main__":
     from templates.scene_template import SceneTemplate
     from functions.direction import PhysxCalculations
-    from models.collision import CollisionInfo
     from context import Context
     from object import Object
     from floor import Floor
 else:
     from .templates.scene_template import SceneTemplate
     from .functions.direction import PhysxCalculations
-    from .models.collision import CollisionInfo
     from .context import Context
     from .object import Object
     from .floor import Floor
@@ -19,6 +17,13 @@ from dataclasses import dataclass
 @dataclass
 class Layer:
     objects: list[Object]
+
+
+@dataclass
+class CollisionInfo:
+    object: Object
+    index: int
+    angle: float
 
 
 class Scene(SceneTemplate):
@@ -46,5 +51,6 @@ class Scene(SceneTemplate):
             index=collision_indeces,
             angle=angle
         )
+
 
 test_scene = Scene()

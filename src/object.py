@@ -4,9 +4,15 @@ if __name__ == "__main__":
     from templates.object_template import ObjectTemplate
     from physics_model_generic import PhysicsModelGeneric
 else:
-    from .context import Context, SurfaceInfo
-    from .templates.object_template import ObjectTemplate
-    from .physics_model_generic import PhysicsModelGeneric
+    try:
+        from .context import Context, SurfaceInfo
+        from .templates.object_template import ObjectTemplate
+        from .physics_model_generic import PhysicsModelGeneric
+    except ImportError:
+        from context import Context, SurfaceInfo
+        from templates.object_template import ObjectTemplate
+        from physics_model_generic import PhysicsModelGeneric
+
 
 
 from pygame.constants import QUIT

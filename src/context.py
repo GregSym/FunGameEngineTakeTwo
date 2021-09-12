@@ -1,8 +1,12 @@
 import dataclasses
-if __name__=="__main__":
+if __name__ == "__main__":
     from events.action import Action
 else:
-    from .events.action import Action
+    try:
+        from .events.action import Action
+    except ImportError:
+        from events.action import Action # in the specific case where context is accessed relatively
+
 from typing import Any
 import pygame
 
