@@ -1,4 +1,8 @@
 import dataclasses
+if __name__=="__main__":
+    from events.action import Action
+else:
+    from .events.action import Action
 from typing import Any
 import pygame
 
@@ -30,3 +34,8 @@ class Context:
     screen: Surface
     surface_info: SurfaceInfo
     events: list[event.Event]
+    actions: list[Action]
+
+    def add_action(self, action: Action):
+        """ Adds an actions to the context.actions list to be executed as instructed as part of the event loop """
+        self.actions.append(action)

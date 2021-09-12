@@ -8,6 +8,8 @@ else:
     from src.physics_model_generic import PhysicsModelGeneric
 
 from dataclasses import dataclass
+from datetime import timedelta
+from src.events.action import Action
 
 from pygame import Vector2, event
 import pygame
@@ -115,8 +117,17 @@ class PlayerController(ControllerTemplate):
             self.physics_model.acceleration.x = 0
 
     def __move_horizontal_keyup(self, direction: str):
+
+        # def __private_test_decel():
+        #     if self.physics_model.velocity.x >= 0:
+        #         self.physics_model.velocity.x -= self.acceleration_chunk
+        #     else:
+        #         self.physics_model.velocity.x = 0
+
         if self.acceleration_chunk * self.physics_model.velocity.x >= 0:  # if acc. is still in the same direction
             # as vel. then reset the physics for now
+            # self.context.actions.append(Action.do_until(
+            #     action=lambda:  __private_test_decel(), duration=timedelta(seconds=2)))
             self.__reset_physics_x()
 
     def get_events(self):

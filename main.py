@@ -1,4 +1,6 @@
 # Import standard modules.
+from datetime import timedelta
+from src.events.action import Action
 from src.settings.setup import pyGameSetup
 from pygame import event
 from src.player import Player
@@ -23,7 +25,7 @@ class MainApp(AppTemplate):
         super().__init__()
         dt, fps, clock, screen = pyGameSetup()
         self.context: Context = Context(
-            fps=fps, dt=dt, clock=clock, screen=screen, surface_info=SurfaceInfo(width=640, height=480), events=event.get())
+            fps=fps, dt=dt, clock=clock, screen=screen, surface_info=SurfaceInfo(width=640, height=480), events=event.get(), actions=[])
         self.run()
 
     def run(self):
@@ -43,7 +45,7 @@ class Engine(MainApp):
         super().__init__()
 
     def setup(self):
-        self.objects = [Object(context=self.context, physics_model=PhysicsModelGeneric(has_gravity=True)), Floor(
+        self.objects: list[Object] = [Object(context=self.context, physics_model=PhysicsModelGeneric(has_gravity=True)), Floor(
             context=self.context, physics_model=PhysicsModelGeneric(position=Vector2(0, 300)))]
 
     def update(self):
@@ -60,6 +62,11 @@ class Engine(MainApp):
             if event.type == pygame.MOUSEBUTTONUP:
                 self.objects.append(Player(context=self.context, physics_model=PhysicsModelGeneric(
                     position=Vector2(mouse.get_pos()), velocity=Vector2(0, 0), has_gravity=True)))
+
+        for index, action in enumerate(self.context.actions):
+            """ Handles actions and deletes once executed """
+            if action.update():
+                self.context.actions.pop(index)
 
         for object in self.objects:
             if type(object) == Player:
@@ -84,10 +91,12 @@ class Engine(MainApp):
         # Flip the display so that the things we drew actually show up.
         pygame.display.flip()
 
+
 def main():
     """ Main functionality of the app """
-    Engine() # init and run engine - engine is currently run from the constructor/init method
+    Engine()  # init and run engine - engine is currently run from the constructor/init method
     # those aren't the same thing but, like, whatevs
+
 
 if __name__ == "__main__":
     main()
