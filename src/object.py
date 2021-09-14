@@ -104,9 +104,11 @@ class Object(ObjectTemplate):
         if hasattr(self, 'collision'):
             self.handle_collision()
         self.physics_model.gravity_update(dt=self.context.dt)
+        self.draw()
 
     def draw(self):
-        self.rect.update(self.physics_model.position.x, self.physics_model.position.y, self.dimensions.x, self.dimensions.y)
+        self.rect.x = self.physics_model.position.x
+        self.rect.y = self.physics_model.position.y
         self.context.screen.blit(self.sprite, dest=(
             self.physics_model.position.x, self.physics_model.position.y, self.dimensions.x, self.dimensions.y))
 

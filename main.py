@@ -33,8 +33,8 @@ class MainApp(AppTemplate):
         self.setup()
         print(f"fps is:", self.context.fps)
         while True:
-            self.update()
             self.draw()
+            self.update()
             # NOTE: .tick method returns milliseconds, hence /1000
             self.context.dt = self.context.clock.tick(self.context.fps) / 1000
             print(self.context.dt)
@@ -101,12 +101,13 @@ class Engine(MainApp):
     def draw(self):
         self.context.screen.fill((0, 255, 0))  # Fill the screen with black.
 
-        # Redraw screen here.
-        for object in self.objects:
-            #object.context = self.context
-            object.draw()
+        # Redraw screen here. - NOTE: draw moved to game Object class's update method
 
-        self.scene.draw()
+        # for object in self.objects:
+        #     #object.context = self.context
+        #     object.draw()
+
+        # self.scene.draw()
 
         # Flip the display so that the things we drew actually show up.
         pygame.display.flip()

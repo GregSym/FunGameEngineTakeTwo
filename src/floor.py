@@ -28,3 +28,7 @@ class Floor(Object):
         self.sprite = Surface(
             size=(self.context.surface_info.width, self.dimensions.y))
         self.rect = self.sprite.get_rect()
+
+    def draw(self):
+        super().draw()
+        self.rect.update(self.physics_model.position.x, self.physics_model.position.y, self.context.surface_info.width, self.dimensions.y)
