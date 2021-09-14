@@ -14,7 +14,7 @@ else:
         from templates.object_template import ObjectTemplate
         from physics_model_generic import PhysicsModelGeneric
 
-
+from . import scene
 from pygame.constants import QUIT
 from pygame.locals import Color
 from typing import Any, Tuple
@@ -65,14 +65,7 @@ class Object(ObjectTemplate):
                     (-.9)
 
     def handle_collision(self):
-        if __name__ == "__main__":
-            from scene import CollisionInfo
-        else:
-            try:
-                from .scene import CollisionInfo
-            except ImportError:
-                from scene import CollisionInfo
-        def __basic_vertical_collision(self: Object, collision: CollisionInfo):
+        def __basic_vertical_collision(self: Object, collision: scene.CollisionInfo):
             if collision.angle==math.pi / 2 or collision.angle == math.pi * 3 / 2:
                 self.__vertical_bounce()
                 self.collision = None
@@ -81,7 +74,6 @@ class Object(ObjectTemplate):
             __basic_vertical_collision(self=self, collision=self.collision)
 
     def update(self):
-        self.handle_collision()
         self.physics_model.gravity_update(dt=self.context.dt)
 
     def draw(self):

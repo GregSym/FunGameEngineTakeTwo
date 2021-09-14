@@ -6,6 +6,7 @@ if __name__ == "__main__":
     from floor import Floor
 else:
     try:
+        print('trying the regular imports')
         from .templates.scene_template import SceneTemplate
         from .functions.direction import PhysxCalculations
         from .context import Context
