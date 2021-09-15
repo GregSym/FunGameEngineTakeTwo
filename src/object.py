@@ -45,6 +45,8 @@ class Object(ObjectTemplate):
     collision = CollisionEvent(
         has_vertical_collision=False, has_horizontal_collision=False)
     collision_objects: dict[CollisionKeys, ObjectTemplate] = {}
+    collision_target = 'env'
+
 
     def __init__(self,
                  context: context.Context,
@@ -84,14 +86,13 @@ class Object(ObjectTemplate):
     def handle_collision(self):
         if CollisionKeys.VERTICAL in self.collision_objects:
             self.__vertical_bounce()
-            self.collision_objects.pop(key=CollisionKeys.VERTICAL)
+            self.collision_objects.pop(CollisionKeys.VERTICAL)
         elif CollisionKeys.HORIZONTAL in self.collision_objects:
-            self.collision_objects.pop(key=CollisionKeys.HORIZONTAL)
+            self.collision_objects.pop(CollisionKeys.HORIZONTAL)
 
     def get_collision(self):
-        collision_target = 'env'
-        if collision_target in self.context.scene:
-            collision_layer = self.context.scene[collision_target]
+        if self.collision_target in self.context.scene:
+            collision_layer = self.context.scene[self.collision_target]
             collision_objects = [
                 object for object in collision_layer.objects if object.get_rect().colliderect(self)]
 
@@ -99,16 +100,17 @@ class Object(ObjectTemplate):
                 angle = PhysxCalculations.determineSide(
                     self.rect, object.get_rect())
                 if angle == np.pi / 2 or angle == 3 * np.pi / 2:
-                    if CollisionKeys.VERTICAL in self.collision_objects:
+                    if not CollisionKeys.VERTICAL in self.collision_objects:
                         self.collision.has_vertical_collision = True
                         self.collision_objects[CollisionKeys.VERTICAL] = object
                 else:
-                    if CollisionKeys.HORIZONTAL in self.collision_objects:
+                    if not CollisionKeys.HORIZONTAL in self.collision_objects:
                         self.collision.has_horizontal_collision = True
                         self.collision_objects[CollisionKeys.HORIZONTAL] = object
                 if self.collision.has_horizontal_collision and self.collision.has_vertical_collision:
                     # reduces unecessary looping
                     return
+        return
 
     def update(self):
         self.get_collision()

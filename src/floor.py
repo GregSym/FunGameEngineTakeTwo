@@ -17,3 +17,5 @@ class Floor(object.Object):
         # reset sprite assignment of floor to this full screen width object
         self.sprite = Surface(
             size=(self.context.surface_info.width, self.dimensions.y))
+        self.rect = self.sprite.get_rect()
+        self.collision_target = ''

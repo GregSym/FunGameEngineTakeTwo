@@ -16,6 +16,7 @@ class PhysicsModelGeneric:
     has_gravity: bool = False
     smooth_physics: bool = True
     """ smooths off the phsx bouncing effects """
+    has_collision: bool = False
 
     def gravity_update(self, dt: float):
         if self.has_gravity:

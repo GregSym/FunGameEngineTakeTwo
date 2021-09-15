@@ -50,6 +50,10 @@ class Engine(MainApp):
     def setup(self):
         self.objects: list[Object] = [Object(context=self.context, physics_model=PhysicsModelGeneric(has_gravity=True)), Floor(
             context=self.context, physics_model=PhysicsModelGeneric(position=Vector2(0, 300)))]
+        self.context.scene['npc'] = Layer(objects=[Object(context=self.context, physics_model=PhysicsModelGeneric(has_gravity=True))])
+        self.context.scene['player'] = Layer(objects=[])
+        self.context.scene['env'] = Layer(objects=[Floor(
+            context=self.context, physics_model=PhysicsModelGeneric(position=Vector2(0, 300)))])
 
     def update(self):
         """
@@ -63,7 +67,9 @@ class Engine(MainApp):
                 sys.exit()  # Not including this line crashes the script on Windows. Possibly
                 # on other operating systems too, but I don't know for sure. - note from template
             if event.type == pygame.MOUSEBUTTONUP:
-                self.objects.append(Player(context=self.context, physics_model=PhysicsModelGeneric(
+                # self.objects.append(Player(context=self.context, physics_model=PhysicsModelGeneric(
+                #     position=Vector2(mouse.get_pos()), velocity=Vector2(0, 0), has_gravity=True)))
+                self.context.scene['player'].objects.append(Player(context=self.context, physics_model=PhysicsModelGeneric(
                     position=Vector2(mouse.get_pos()), velocity=Vector2(0, 0), has_gravity=True)))
 
         for index, action in enumerate(self.context.actions):
@@ -71,15 +77,19 @@ class Engine(MainApp):
             if action.update():
                 self.context.actions.pop(index)
 
-        for object in self.objects:
-            if type(object) == Player:
-                object.test_collision(self.objects[1])
+        for layer in self.context.scene.values():
+            for object in layer.objects:
                 object.update()
-            elif type(object) == Object:
-                object.test_collision(self.objects[1])
-                object.update()
-            else:
-                object.update()
+
+        # for object in self.objects:
+        #     if type(object) == Player:
+        #         object.test_collision(self.objects[1])
+        #         object.update()
+        #     elif type(object) == Object:
+        #         object.test_collision(self.objects[1])
+        #         object.update()
+        #     else:
+        #         object.update()
 
         # self.objects[0].test_collision(self.objects[1])
 
@@ -87,9 +97,10 @@ class Engine(MainApp):
         self.context.screen.fill((0, 255, 0))  # Fill the screen with black.
 
         # Redraw screen here.
-        for object in self.objects:
+        for layer in self.context.scene.values():
+            for object in layer.objects:
             #object.context = self.context
-            object.draw()
+                object.draw()
 
         # Flip the display so that the things we drew actually show up.
         pygame.display.flip()
