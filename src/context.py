@@ -1,11 +1,15 @@
 import dataclasses
 if __name__ == "__main__":
     from events.action import Action
+    import scene
 else:
     try:
         from .events.action import Action
+        from . import scene
     except ImportError:
         from events.action import Action # in the specific case where context is accessed relatively
+        import scene
+
 
 from typing import Any
 import pygame
@@ -37,6 +41,7 @@ class Context:
     clock: Clock
     screen: Surface
     surface_info: SurfaceInfo
+    scene: dict[str, scene.Layer]
     events: list[event.Event] = dataclasses.field(default_factory=lambda: [])
     actions: list[Action] = dataclasses.field(default_factory=lambda: [])
 

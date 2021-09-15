@@ -1,5 +1,6 @@
 # Import standard modules.
 from datetime import timedelta
+from src.scene import Layer, Scene
 from src.events.action import Action
 from src.settings.setup import pyGameSetup
 from pygame import event
@@ -25,7 +26,9 @@ class MainApp(AppTemplate):
         super().__init__()
         dt, fps, clock, screen = pyGameSetup()
         self.context: Context = Context(
-            fps=fps, dt=dt, clock=clock, screen=screen, surface_info=SurfaceInfo(width=640, height=480), events=event.get(), actions=[])
+            fps=fps, dt=dt, clock=clock, screen=screen, surface_info=SurfaceInfo(
+                width=640, height=480),
+            events=event.get(), actions=[], scene={})
         self.run()
 
     def run(self):

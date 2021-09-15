@@ -1,26 +1,38 @@
 if __name__ == "__main__":
     from templates.scene_template import SceneTemplate
-    from templates.object_template import ObjectTemplate as Object
+    from templates.object_template import ObjectTemplate
     from functions.direction import PhysxCalculations
 else:
-    from .templates.scene_template import SceneTemplate
-    from .templates.object_template import ObjectTemplate as Object
-    from .functions.direction import PhysxCalculations
+    try:
+        from .templates.scene_template import SceneTemplate
+        from .templates.object_template import ObjectTemplate
+        from .functions.direction import PhysxCalculations
+    except ImportError:
+        from templates.scene_template import SceneTemplate
+        from templates.object_template import ObjectTemplate
+        from functions.direction import PhysxCalculations
 
 
-from dataclasses import dataclass
-
+from dataclasses import dataclass, field
 
 @dataclass
 class Layer:
-    objects: list[Object]
+    objects: list[ObjectTemplate]
 
 
 @dataclass
 class CollisionInfo:
-    object: Object
+    object: ObjectTemplate
     index: int
     angle: float
+
+@dataclass
+class CollisionObjects:
+    """
+        Last detected collision objects
+    """
+    vertical_object: list[ObjectTemplate] = field(default_factory=lambda: [])
+    horizontal_object: list[ObjectTemplate] = field(default_factory=lambda: [])
 
 @dataclass
 class Scene(SceneTemplate):
@@ -31,11 +43,8 @@ class Scene(SceneTemplate):
         I guess we'll find out in like 48 hours when this thing is bigger and I can't remember where the problems 
         come from anymore
     """
-
-    scene: dict[str, Layer]
-
-    def handle_collisions(self, obj: Object, lay: Layer):
-        pass
+    def __init__(self, scene: dict[str, Layer]) -> None:
+        self.scene = scene
+        super().__init__()
 
 
-test_scene = Scene()

@@ -1,42 +1,53 @@
 
 if __name__ == "__main__":
-    from context import Context, SurfaceInfo
     from templates.object_template import ObjectTemplate
     from physics_model_generic import PhysicsModelGeneric
     from functions.direction import PhysxCalculations
+    import context
+    from models.collision import CollisionEvent
     import scene
 else:
     try:
-        from .context import Context, SurfaceInfo
         from .templates.object_template import ObjectTemplate
         from .physics_model_generic import PhysicsModelGeneric
         from .functions.direction import PhysxCalculations
+        from .models.collision import CollisionEvent
+        from . import context
         from . import scene
     except ImportError:
-        from context import Context, SurfaceInfo
         from templates.object_template import ObjectTemplate
         from physics_model_generic import PhysicsModelGeneric
         from functions.direction import PhysxCalculations
+        from models.collision import CollisionEvent
+        import context
         import scene
 
 
-from src.models.collision import CollisionEvent
+from dataclasses import dataclass
 from pygame.constants import QUIT
 from pygame.locals import Color
 from typing import Any, Tuple
 from pygame import Vector2, Surface, math, sprite
 import pygame
 import numpy as np
+from enum import Enum, auto
+
+
+class CollisionKeys(Enum):
+    HORIZONTAL = auto()
+    VERTICAL = auto()
 
 
 class Object(ObjectTemplate):
     """
         Object with methods for setup, update and draw
     """
-    collision = CollisionEvent(has_vertical_collision=False, has_horizontal_collision=False)
+    collision = CollisionEvent(
+        has_vertical_collision=False, has_horizontal_collision=False)
+    collision_objects: dict[CollisionKeys, ObjectTemplate] = {}
 
     def __init__(self,
-                 context: Context,
+                 context: context.Context,
                  dimensions: Vector2 = Vector2(50, 50),
                  physics_model: PhysicsModelGeneric = PhysicsModelGeneric()) -> None:
         super().__init__()
@@ -71,21 +82,37 @@ class Object(ObjectTemplate):
                 (-.9)
 
     def handle_collision(self):
+        if CollisionKeys.VERTICAL in self.collision_objects:
+            self.__vertical_bounce()
+            self.collision_objects.pop(key=CollisionKeys.VERTICAL)
+        elif CollisionKeys.HORIZONTAL in self.collision_objects:
+            self.collision_objects.pop(key=CollisionKeys.HORIZONTAL)
+
+    def get_collision(self):
         collision_target = 'env'
-        collision_layer = [self.context.scene.scene[key]
-                           for key in self.context.scene.scene.keys() if key == collision_target][0]
-        collision_objects = [
-            object for object in collision_layer.objects if object.get_rect().colliderect(self)]
+        if collision_target in self.context.scene:
+            collision_layer = self.context.scene[collision_target]
+            collision_objects = [
+                object for object in collision_layer.objects if object.get_rect().colliderect(self)]
 
-        for object in collision_objects:
-            angle = PhysxCalculations.determineSide(self.rect, object.get_rect())
-            if angle == np.pi / 2 or angle == 3 * np.pi / 2:
-                self.collision.has_vertical_collision = True
-            else:
-                self.collision.has_horizontal_collision = True
-
+            for object in collision_objects:
+                angle = PhysxCalculations.determineSide(
+                    self.rect, object.get_rect())
+                if angle == np.pi / 2 or angle == 3 * np.pi / 2:
+                    if CollisionKeys.VERTICAL in self.collision_objects:
+                        self.collision.has_vertical_collision = True
+                        self.collision_objects[CollisionKeys.VERTICAL] = object
+                else:
+                    if CollisionKeys.HORIZONTAL in self.collision_objects:
+                        self.collision.has_horizontal_collision = True
+                        self.collision_objects[CollisionKeys.HORIZONTAL] = object
+                if self.collision.has_horizontal_collision and self.collision.has_vertical_collision:
+                    # reduces unecessary looping
+                    return
 
     def update(self):
+        self.get_collision()
+        self.handle_collision()
         self.physics_model.gravity_update(dt=self.context.dt)
         self.rect.x, self.rect.y = self.physics_model.position
 
@@ -117,8 +144,8 @@ if __name__ == "__main__":
 
     # Main game loop.
     dt = 1/fps  # dt is the time since last frame.
-    context = Context(fps=fps, dt=dt, clock=fpsClock,
-                      screen=screen, surface_info=SurfaceInfo(width, height))
+    context = context.Context(fps=fps, dt=dt, clock=fpsClock,
+                              screen=screen, surface_info=context.SurfaceInfo(width, height))
 
     test_object = Object(context=context, physics_model=PhysicsModelGeneric())
 
