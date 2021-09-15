@@ -1,5 +1,7 @@
 from abc import ABC
 
+import pygame
+
 class ObjectTemplate(ABC):
     """
         An abstract base class of the Objects instantiable within the Engine
@@ -23,4 +25,9 @@ class ObjectTemplate(ABC):
     def reset():
         """
             Reset the object parameters to default
+        """
+
+    def get_rect() -> pygame.Rect:
+        """
+            Getter for the item's rect
         """
