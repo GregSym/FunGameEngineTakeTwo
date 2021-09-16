@@ -117,6 +117,7 @@ class Object(ObjectTemplate):
         self.handle_collision()
         self.physics_model.gravity_update(dt=self.context.dt)
         self.rect.x, self.rect.y = self.physics_model.position
+        print(self.rect.y, self.rect.bottomright)
 
     def draw(self):
         self.context.screen.blit(self.sprite, dest=self.rect)

@@ -95,5 +95,5 @@ if __name__ == "__main__":
         "delayed"), delay=timedelta(seconds=2))
     print(event3.update())
     event4 = Action.do_when(action=lambda: print(
-        'condition'), condition=lambda: test_bool())
+        'condition'), condition=lambda _=None: test_bool())
     print(event4.update())
