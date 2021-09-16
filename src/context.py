@@ -1,13 +1,16 @@
 import dataclasses
 if __name__ == "__main__":
     from events.action import Action
+    from models.physics import WorldPhysics
     import scene
 else:
     try:
         from .events.action import Action
+        from .models.physics import WorldPhysics
         from . import scene
     except ImportError:
         from events.action import Action # in the specific case where context is accessed relatively
+        from models.physics import WorldPhysics
         import scene
 
 
@@ -44,6 +47,7 @@ class Context:
     scene: dict[str, scene.Layer]
     events: list[event.Event] = dataclasses.field(default_factory=lambda: [])
     actions: list[Action] = dataclasses.field(default_factory=lambda: [])
+    physics: WorldPhysics = WorldPhysics()
 
     def add_action(self, action: Action):
         """ Adds an actions to the context.actions list to be executed as instructed as part of the event loop """

@@ -78,6 +78,7 @@ class PlayerController(ControllerTemplate):
         """
             packages both keyup and keydown handlers
         """
+        self.jump = KeyAction(key_down=lambda: self.__jump_keydown(), key_up=lambda: self.__jump_keyup())
 
     def directionChanged(self) -> bool:
         """
@@ -130,6 +131,17 @@ class PlayerController(ControllerTemplate):
             #     action=lambda:  __private_test_decel(), duration=timedelta(seconds=2)))
             self.__reset_physics_x()
 
+    def __jump_keydown(self):
+        print('called jump')
+        if self.state.is_grounded:
+            print('did jump')
+            self.physics_model.acceleration.y = -300
+        else:
+            self.physics_model.acceleration.y = self.context.physics.gravity_constant / 1.5
+
+    def __jump_keyup(self):
+        self.physics_model.acceleration.y = self.context.physics.gravity_constant
+
     def get_events(self):
         for event in self.context.events:
             self.handle_event(event)
@@ -140,8 +152,12 @@ class PlayerController(ControllerTemplate):
                 self.move_left.key_down()
             if event.key == self.key_map.right:
                 self.move_right.key_down()
+            if event.key == self.key_map.jump:
+                self.jump.key_down()
         if event.type == pygame.KEYUP:
             if event.key == self.key_map.left:
                 self.move_left.key_up()
             if event.key == self.key_map.right:
                 self.move_right.key_up()
+            if event.key == self.key_map.jump:
+                self.jump.key_up()

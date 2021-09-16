@@ -31,3 +31,8 @@ class ObjectTemplate(ABC):
         """
             Getter for the item's rect
         """
+
+    def update_controller_collisions(self, angle: float):
+        """
+            communicate collision info to the controller, if there is one
+        """

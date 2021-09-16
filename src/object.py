@@ -99,7 +99,9 @@ class Object(ObjectTemplate):
             for object in collision_objects:
                 angle = PhysxCalculations.determineSide(
                     self.rect, object.get_rect())
+                self.angle = angle
                 if angle == np.pi / 2 or angle == 3 * np.pi / 2:
+                    self.update_controller_collisions(angle=angle)
                     if not CollisionKeys.VERTICAL in self.collision_objects:
                         self.collision.has_vertical_collision = True
                         self.collision_objects[CollisionKeys.VERTICAL] = object
@@ -117,7 +119,6 @@ class Object(ObjectTemplate):
         self.handle_collision()
         self.physics_model.gravity_update(dt=self.context.dt)
         self.rect.x, self.rect.y = self.physics_model.position
-        print(self.rect.y, self.rect.bottomright)
 
     def draw(self):
         self.context.screen.blit(self.sprite, dest=self.rect)
