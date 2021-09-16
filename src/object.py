@@ -47,7 +47,6 @@ class Object(ObjectTemplate):
     collision_objects: dict[CollisionKeys, ObjectTemplate] = {}
     collision_target = 'env'
 
-
     def __init__(self,
                  context: context.Context,
                  dimensions: Vector2 = Vector2(50, 50),
@@ -94,7 +93,8 @@ class Object(ObjectTemplate):
         if self.collision_target in self.context.scene:
             collision_layer = self.context.scene[self.collision_target]
             collision_objects = [
-                object for object in collision_layer.objects if object.get_rect().colliderect(self)]
+                object for object in collision_layer.objects if object.get_rect().colliderect(
+                    self.physics_model.position, self.dimensions)]
 
             for object in collision_objects:
                 angle = PhysxCalculations.determineSide(
@@ -115,20 +115,25 @@ class Object(ObjectTemplate):
         return
 
     def update(self):
-        self.get_collision()
-        self.handle_collision()
         self.physics_model.gravity_update(dt=self.context.dt)
         self.rect.x, self.rect.y = self.physics_model.position
+        self.get_collision()
+        self.handle_collision()
 
     def draw(self):
         self.context.screen.blit(self.sprite, dest=self.rect)
 
     def reset(self, hard_reset: bool = False):
-        self.acceleration = Vector2(0, 0)
-        self.velocity = Vector2(0, 0)
+        self.physics_model.acceleration = Vector2(0, 0)
+        self.physics_model.velocity = Vector2(0, 0)
+        if hard_reset:
+            self.physics_model.position = Vector2(0, 0)
 
     def get_rect(self) -> pygame.Rect:
         return self.rect
+
+    def get_surface(self) -> pygame.Surface:
+        return self.sprite
 
 
 if __name__ == "__main__":

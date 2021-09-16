@@ -32,6 +32,11 @@ class ObjectTemplate(ABC):
             Getter for the item's rect
         """
 
+    def get_surface() -> pygame.Surface:
+        """
+            Getter for the item's surface
+        """
+
     def update_controller_collisions(self, angle: float):
         """
             communicate collision info to the controller, if there is one

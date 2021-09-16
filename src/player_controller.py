@@ -135,7 +135,7 @@ class PlayerController(ControllerTemplate):
         print('called jump')
         if self.state.is_grounded:
             print('did jump')
-            self.physics_model.acceleration.y = -300
+            self.physics_model.acceleration.y = -1000
         else:
             self.physics_model.acceleration.y = self.context.physics.gravity_constant / 1.5
 

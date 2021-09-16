@@ -34,7 +34,7 @@ class Player(Object):
         self.controller.get_events()
 
     def update_controller_collisions(self, angle: float):
-        if angle == np.pi / 2:
+        if self.physics_model.acceleration.y >= self.physics_model.velocity.y:
             self.controller.state.is_grounded = True
         else:
             self.controller.state.is_grounded = False
