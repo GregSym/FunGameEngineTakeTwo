@@ -6,7 +6,7 @@ from src.settings.setup import pyGameSetup
 from pygame import event
 from src.player import Player
 from src.settings.settings import Settings
-from src.physics_model_generic import PhysicsModelGeneric
+from src.physics_model_generic import PhysicsModelGeneric, PlayerPhysics
 from pygame.math import Vector2
 from src.floor import Floor
 from src.object import Object
@@ -39,7 +39,7 @@ class MainApp(AppTemplate):
             self.draw()
             # NOTE: .tick method returns milliseconds, hence /1000
             self.context.dt = self.context.clock.tick(self.context.fps) / 1000
-            print(self.context.dt)
+            # print(self.context.dt)
 
 
 class Engine(MainApp):
@@ -69,7 +69,7 @@ class Engine(MainApp):
             if event.type == pygame.MOUSEBUTTONUP:
                 # self.objects.append(Player(context=self.context, physics_model=PhysicsModelGeneric(
                 #     position=Vector2(mouse.get_pos()), velocity=Vector2(0, 0), has_gravity=True)))
-                self.context.scene['player'].objects.append(Player(context=self.context, physics_model=PhysicsModelGeneric(
+                self.context.scene['player'].objects.append(Player(context=self.context, physics_model=PlayerPhysics(
                     position=Vector2(mouse.get_pos()), velocity=Vector2(0, 0), has_gravity=True)))
 
         for index, action in enumerate(self.context.actions):

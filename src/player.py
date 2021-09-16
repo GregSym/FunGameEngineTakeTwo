@@ -4,12 +4,12 @@
 if __name__ == "__main__":
     from object import Object
     from context import Context
-    from physics_model_generic import PhysicsModelGeneric
+    from physics_model_generic import PhysicsModelGeneric, PlayerPhysics
     from constants.colours import Colours
 else:
     from .object import Object
     from .context import Context
-    from .physics_model_generic import PhysicsModelGeneric
+    from .physics_model_generic import PhysicsModelGeneric, PlayerPhysics
     from .constants.colours import Colours
 
 import numpy as np
@@ -29,12 +29,12 @@ class Player(Object):
         self.controller = PlayerController(
             context=self.context, physics_model=self.physics_model)  # set a controller
 
-    def update(self):
-        super().update()
+    def collision_interacting_event(self):
         self.controller.get_events()
 
     def update_controller_collisions(self, angle: float):
-        if self.physics_model.acceleration.y >= self.physics_model.velocity.y:
+        if angle == np.pi / 2:
             self.controller.state.is_grounded = True
-        else:
-            self.controller.state.is_grounded = False
+
+    def reset_controller_collisions(self):
+        self.controller.state.is_grounded = False

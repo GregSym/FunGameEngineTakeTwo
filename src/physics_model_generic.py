@@ -20,9 +20,27 @@ class PhysicsModelGeneric:
 
     def gravity_update(self, dt: float):
         if self.has_gravity:
-            self.position += self.velocity * dt
             self.velocity += self.acceleration * dt
+            self.position += self.velocity * dt
+
+    def handle_vertical_collision(self):
+        if self.smooth_physics:
+            if self.acceleration.y >= self.velocity.y:
+                self.velocity.y = 0
+            else:
+                self.velocity.y = self.velocity.y * \
+                    (-.9)
+        else:
+            self.velocity.y = self.velocity.y * \
+                (-.9)
+
+    def handle_horizontal_collision(self):
+        pass
+
+class PlayerPhysics(PhysicsModelGeneric):
+    def handle_vertical_collision(self):
+        self.velocity.y = 0
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     print(asdict(PhysicsModelGeneric()))

@@ -41,3 +41,13 @@ class ObjectTemplate(ABC):
         """
             communicate collision info to the controller, if there is one
         """
+
+    def reset_controller_collisions(self):
+        """
+            reset controller state props, e.g. is_grounded
+        """
+
+    def collision_interacting_event(self):
+        """
+            insert functions that interact with the collision here
+        """
