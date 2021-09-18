@@ -11,68 +11,81 @@ class ActionState(Enum):
 
         record of possible states actions can take when being evaluated by an event-loop
     """
-    default = auto()
-    duration = auto()
-    time = auto()
-    delay = auto()
-    condition = auto()
+    DEFAULT = auto()
+    DURATION = auto()
+    TIME = auto()
+    DELAY = auto()
+    CONDITION = auto()
+    DURATION_CONDITION = auto()
 
 
 class Action:
-    state = ActionState.default
+    state = ActionState.DEFAULT
 
     def __init__(self, action: Callable) -> None:
         self.action = action
 
     @classmethod
     def do_until(self, action: Callable, duration: timedelta):
-        self.state = ActionState.duration
+        self.state = ActionState.DURATION
         self.duration = duration
         self.end_time = datetime.now() + self.duration
         return self(action=action)
 
     @classmethod
     def do_at_time(self, action: Callable, time: datetime):
-        self.state = ActionState.time
+        self.state = ActionState.TIME
         self.time = time
         return self(action=action)
 
     @classmethod
     def do_after_delay(self, action: Callable, delay: timedelta):
-        self.state = ActionState.delay
+        self.state = ActionState.DELAY
         self.delay = delay
         self.end_time = datetime.now() + self.delay
         return self(action=action)
 
     @classmethod
-    def do_when(self, action: Callable, condition: Callable[[Any], bool]):
-        self.state = ActionState.condition
+    def do_when(self, action: Callable, condition: Callable[..., bool]):
+        self.state = ActionState.CONDITION
+        self.condition = condition
+        return self(action=action)
+
+    @classmethod
+    def do_until_condition(self, action: Callable, condition: Callable[..., bool]):
+        self.state = ActionState.DURATION_CONDITION
         self.condition = condition
         return self(action=action)
 
     def update(self) -> bool:
-        if self.state == ActionState.duration:
+        if self.state == ActionState.DURATION:
             if datetime.now() >= self.end_time:
                 self.action()
                 return True
             else:
                 self.action()
                 return False
-        elif self.state == ActionState.time:
+        elif self.state == ActionState.TIME:
             if datetime.now().time() >= self.time:
                 self.action()
                 return True
             else:
                 return False
-        elif self.state == ActionState.delay:
+        elif self.state == ActionState.DELAY:
             if datetime.now() >= self.end_time:
                 self.action()
                 return True
             return False
-        elif self.state == ActionState.condition:
+        elif self.state == ActionState.CONDITION:
             if self.condition():
                 self.action()
                 return True
+            return False
+        elif self.state == ActionState.DURATION_CONDITION:
+            if self.condition():
+                self.action()
+                return True
+            self.action()
             return False
         # default behaviour
         print('didn\'t pickup duration')
@@ -97,3 +110,6 @@ if __name__ == "__main__":
     event4 = Action.do_when(action=lambda: print(
         'condition'), condition=lambda _=None: test_bool())
     print(event4.update())
+    event5 = Action.do_until_condition(action=lambda: print(
+        'do while condition'), condition=lambda _=None: not test_bool())
+    print(event5.update())
