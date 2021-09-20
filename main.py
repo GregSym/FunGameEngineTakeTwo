@@ -1,5 +1,6 @@
 # Import standard modules.
 from datetime import timedelta
+from src.templates.event_loop_item import EventLoopImplementation, EventLoopMultithreadedDraw
 from src.scene import Layer, Scene
 from src.events.action import Action
 from src.settings.setup import pyGameSetup
@@ -24,12 +25,20 @@ from pygame import mouse
 class MainApp(AppTemplate):
     def __init__(self) -> None:
         super().__init__()
+        self.run()
+
+    def setup(self):
         dt, fps, clock, screen = pyGameSetup()
         self.context: Context = Context(
             fps=fps, dt=dt, clock=clock, screen=screen, surface_info=SurfaceInfo(
                 width=640, height=480),
-            events=event.get(), actions=[], scene={})
-        self.run()
+            events=event.get(), actions=[], scene={})  
+
+    def loop_logic(self):
+        super().loop_logic()
+        # NOTE: .tick method returns milliseconds, hence /1000
+        self.context.dt = self.context.clock.tick(self.context.fps) / 1000
+        print(self.context.dt)
 
     def run(self):
         self.setup()
@@ -39,7 +48,7 @@ class MainApp(AppTemplate):
             self.draw()
             # NOTE: .tick method returns milliseconds, hence /1000
             self.context.dt = self.context.clock.tick(self.context.fps) / 1000
-            # print(self.context.dt)
+            print(self.context.dt)
 
 
 class Engine(MainApp):
@@ -48,6 +57,7 @@ class Engine(MainApp):
         super().__init__()
 
     def setup(self):
+        super().setup()
         self.objects: list[Object] = [Object(context=self.context, physics_model=PhysicsModelGeneric(has_gravity=True)), Floor(
             context=self.context, physics_model=PhysicsModelGeneric(position=Vector2(0, 300)))]
         self.context.scene['npc'] = Layer(objects=[Object(context=self.context, physics_model=PhysicsModelGeneric(has_gravity=True))])

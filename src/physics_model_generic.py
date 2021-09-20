@@ -1,4 +1,14 @@
 
+from src.context import Context
+if __name__=="__main__":
+    from templates import controller_template
+else:
+    try:
+        from .templates import controller_template
+    except ImportError:
+        from templates import controller_template
+
+
 from dataclasses import asdict, dataclass
 from pygame import Vector2
 
@@ -36,6 +46,46 @@ class PhysicsModelGeneric:
 
     def handle_horizontal_collision(self):
         pass
+
+
+class PhysicsController(controller_template.ControllerTemplate):
+
+    def __init__(self, context: Context, physics_model: PhysicsModelGeneric = PhysicsModelGeneric()) -> None:
+        self.context = context
+        self.physics_model = physics_model
+
+    def update(self):
+        pass
+        #TODO: all the below stuff
+        # calculated next position of rect based on vdt
+
+        # get collisions of projected rect
+
+        # reset vdt to conform to collision restrictions
+
+        # handle actual position update
+
+        # clear collision items
+
+    def gravity_update(self, dt: float):
+        if self.physics_model.has_gravity:
+            self.velocity += self.physics_model.acceleration * dt
+            self.position += self.velocity * dt
+
+    def handle_vertical_collision(self):
+        if self.physics_model.smooth_physics:
+            if self.physics_model.acceleration.y >= self.physics_model.velocity.y:
+                self.velocity.y = 0
+            else:
+                self.physics_model.velocity.y = self.physics_model.velocity.y * \
+                    (-.9)
+        else:
+            self.physics_model.velocity.y = self.physics_model.velocity.y * \
+                (-.9)
+
+    def handle_horizontal_collision(self):
+        pass
+
 
 class PlayerPhysics(PhysicsModelGeneric):
     def handle_vertical_collision(self):

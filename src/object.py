@@ -58,6 +58,9 @@ class Object(ObjectTemplate):
         self.sprite.fill(color=(255, 0, 0))
         self.rect = self.sprite.get_rect()
         self.physics_model = physics_model
+        self.setup()
+
+    def setup(self):
         if self.physics_model.has_gravity:
             self.physics_model.acceleration = Vector2(0, 300)
         else:
@@ -70,17 +73,6 @@ class Object(ObjectTemplate):
         if self.physics_model.position.y + self.dimensions.y >= obj.physics_model.position.y:
             # self.acceleration = Vector2(0, 0)
             self.__vertical_bounce()
-
-    def __vertical_bounce(self):
-        if self.physics_model.smooth_physics:
-            if self.physics_model.acceleration.y >= self.physics_model.velocity.y:
-                self.physics_model.velocity.y = 0
-            else:
-                self.physics_model.velocity.y = self.physics_model.velocity.y * \
-                    (-.9)
-        else:
-            self.physics_model.velocity.y = self.physics_model.velocity.y * \
-                (-.9)
 
     def handle_collision(self):
         if CollisionKeys.VERTICAL in self.collision_objects:
@@ -96,7 +88,8 @@ class Object(ObjectTemplate):
         if self.collision_target in self.context.scene:
             collision_layer = self.context.scene[self.collision_target]
             collision_objects = [
-                object for object in collision_layer.objects if self.rect.colliderect(object.get_rect().x, object.get_rect().y - 3, object.get_rect().right, object.get_rect().bottom)]
+                object for object in collision_layer.objects if self.rect.colliderect(
+                    object.get_rect().x, object.get_rect().y - 3, object.get_rect().right, object.get_rect().bottom)]
             for object in collision_objects:
                 angle = PhysxCalculations.determineSide(
                     self.rect, object.get_rect())
