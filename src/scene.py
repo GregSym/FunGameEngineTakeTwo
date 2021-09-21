@@ -15,10 +15,22 @@ else:
 
 from dataclasses import dataclass, field
 
+import pygame
+
 @dataclass
 class Layer:
     objects: list[ObjectTemplate]
 
+    def get_rect(self):
+        """ gets a rect that wraps all items in layer """
+        if len(self.objects)==0:
+            return pygame.Rect(100, 100, 200, 200)
+        return pygame.Rect(
+            min([object.get_rect().x for object in self.objects]),
+            min([object.get_rect().y for object in self.objects]),
+            max([object.get_rect().right for object in self.objects]),
+            max([object.get_rect().bottom for object in self.objects])
+        )
 
 @dataclass
 class CollisionInfo:

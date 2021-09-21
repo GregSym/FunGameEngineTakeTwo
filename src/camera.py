@@ -1,20 +1,21 @@
 import pygame
 from pygame.math import Vector2
+from pygame.rect import Rect
 from src.scene import Layer
 from .templates.event_loop_item import EventLoopItem
 from .context import Context
 
 class Camera(EventLoopItem):
 
-    buffer_size = 100
-    tracking_velocity = 300
+    buffer_size = 200
+    tracking_velocity = 50
 
-    def __init__(self, context: Context, target: str) -> None:
+    def __init__(self, context: Context, target: str = 'player') -> None:
         super().__init__()
         self.context = context
         self.target = target
         self.layer = self.setup() # get layer to track in setup
-        self.tracked_rect = pygame.Rect()
+        self.tracked_rect = self.layer.get_rect()
 
     def target_position(self) -> Vector2:
         return Vector2(
@@ -27,8 +28,8 @@ class Camera(EventLoopItem):
         self.buffer = pygame.Rect(
             self.buffer_size,
             self.buffer_size,
-            self.context.screen.get_size()[0] + self.buffer_size,
-            self.context.screen.get_size()[1] + self.buffer_size
+            self.context.screen.get_size()[0] - self.buffer_size,
+            self.context.screen.get_size()[1] - self.buffer_size
         )
 
         # define target
@@ -38,6 +39,7 @@ class Camera(EventLoopItem):
         return Layer()
 
     def update(self):
+        self.tracked_rect = self.layer.get_rect()
         if self.target_position().x >= self.buffer.right:
             self.track(direction=Vector2(1, 0))
         elif self.target_position().x < self.buffer.left:
@@ -50,6 +52,12 @@ class Camera(EventLoopItem):
     def track(self, direction: Vector2):
         for layer in self.context.scene.values():
             for object in layer.objects:
-                object.adjust_position(adjustment=self.tracking_velocity * direction)
+                object.adjust_position(adjustment=self.tracking_velocity * direction * (-1))
+
+    def loop_logic():
+        pass
+
+    def draw():
+        pass
 
 

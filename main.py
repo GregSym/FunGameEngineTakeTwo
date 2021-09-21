@@ -1,5 +1,6 @@
 # Import standard modules.
 from datetime import timedelta
+from src.camera import Camera
 from src.templates.event_loop_item import EventLoopImplementation, EventLoopMultithreadedDraw
 from src.scene import Layer, Scene
 from src.events.action import Action
@@ -64,6 +65,7 @@ class Engine(MainApp):
         self.context.scene['player'] = Layer(objects=[])
         self.context.scene['env'] = Layer(objects=[Floor(
             context=self.context, physics_model=PhysicsModelGeneric(position=Vector2(0, 300)))])
+        self.camera = Camera(context=self.context)
 
     def update(self):
         """
@@ -91,17 +93,7 @@ class Engine(MainApp):
             for object in layer.objects:
                 object.update()
 
-        # for object in self.objects:
-        #     if type(object) == Player:
-        #         object.test_collision(self.objects[1])
-        #         object.update()
-        #     elif type(object) == Object:
-        #         object.test_collision(self.objects[1])
-        #         object.update()
-        #     else:
-        #         object.update()
-
-        # self.objects[0].test_collision(self.objects[1])
+        self.camera.update()
 
     def draw(self):
         self.context.screen.fill((0, 255, 0))  # Fill the screen with black.

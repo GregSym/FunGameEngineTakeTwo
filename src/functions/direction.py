@@ -30,3 +30,4 @@ class PhysxCalculations:
             if (rect2.left <= rect1.right < rect2.right) or (rect1.left <= rect2.right < rect1.right):
                 return True
         return False
+
