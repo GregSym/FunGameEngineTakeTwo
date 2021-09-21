@@ -1,7 +1,7 @@
 
+from .models.collision import CollisionKeys, CollisionKeysDetailed, CollisionState
 from src.templates.object_template import ObjectTemplate
 import numpy as np
-from src.object import CollisionKeys
 from src.functions.direction import PhysxCalculations
 import pygame
 from src.context import Context
@@ -50,6 +50,19 @@ class PhysicsModelGeneric:
         predicted_position = self.position + self.velocity * dt
         return pygame.Rect(predicted_position.x, predicted_position.y, self.dimensions.x, self.dimensions.y)
 
+    def leading_edge(self, other_rect: pygame.Rect) -> Vector2:
+        """ get the leading edges based on instantaneous velocity """
+        if self.velocity.x >= 0:
+            horizontal_edge = self.position.x + self.dimensions.x
+        else:
+            horizontal_edge = self.position.x
+        if self.velocity.y >= 0:
+            vertical_edge = self.position.y + self.dimensions.y
+        else:
+            vertical_edge = self.position.y
+        return Vector2(horizontal_edge, vertical_edge)
+
+
     def gravity_update(self, dt: float):
         if self.has_gravity:
             self.velocity += self.acceleration * dt
@@ -75,6 +88,7 @@ class PhysicsController(controller_template.ControllerTemplate):
     detection_buffer = 10
     collision_target = 'env'
     collision: dict[CollisionKeys, ObjectTemplate] = {}
+    collision_state = CollisionState.MOMENTUM
 
     def __init__(self, context: Context, physics_model: PhysicsModelGeneric = PhysicsModelGeneric()) -> None:
         self.context = context
@@ -101,20 +115,7 @@ class PhysicsController(controller_template.ControllerTemplate):
                     return
         return
 
-    def update(self):
-        self.calculate_velocity()
-        self.get_collision(
-            rect=(predicted_rect := self.physics_model.predicted_rect(dt=self.context.dt)))
-        self.correct_velocity()
-        self.physics_model.position = self.physics_model.velocity * self.context.dt
-
-    def input(self):
-        pass
-
-    def calculate_velocity(self):
-        self.physics_model.velocity += self.physics_model.acceleration * self.context.dt
-
-    def correct_velocity(self):
+    def handle_collision(self):
         if CollisionKeys.VERTICAL in self.collision:  # vertical case
             if self.physics_model.velocity.y >= 0:
                 # downwards
@@ -126,18 +127,33 @@ class PhysicsController(controller_template.ControllerTemplate):
                 self.physics_model.velocity.y = self.physics_model.get_rect().top - \
                     self.collision[CollisionKeys.VERTICAL].get_rect().bottom
             self.physics_model.velocity.y = self.physics_model.velocity.y / self.context.dt
-
         if CollisionKeys.HORIZONTAL in self.collision:  # horizontal case
             if self.physics_model.velocity.x >= 0:
                 # downwards
                 # set can jump here
                 self.physics_model.velocity.x = self.physics_model.get_rect().right - \
-                    self.collision[CollisionKeys.VERTICAL].get_rect().left
+                    self.collision[CollisionKeys.HORIZONTAL].get_rect().left
             else:
                 # upwards
                 self.physics_model.velocity.x = self.physics_model.get_rect().left - \
-                    self.collision[CollisionKeys.VERTICAL].get_rect().right
+                    self.collision[CollisionKeys.HORIZONTAL].get_rect().right
             self.physics_model.velocity.x = self.physics_model.velocity.x / self.context.dt
+
+    def update(self):
+        self.input()
+        self.calculate_velocity()
+        self.get_collision(
+            rect=(predicted_rect := self.physics_model.predicted_rect(dt=self.context.dt)))
+        self.handle_collision()
+        self.physics_model.position = self.physics_model.velocity * self.context.dt
+
+    def input(self):
+        pass
+
+    def calculate_velocity(self):
+        self.physics_model.velocity += self.physics_model.acceleration * self.context.dt
+
+
 
         # handle actual position update
 

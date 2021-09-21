@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 import pygame
+from pygame.math import Vector2
 
 
 class ObjectTemplate(ABC):
@@ -43,6 +44,12 @@ class ObjectTemplate(ABC):
         """
             Getter for the item's surface
         """
+
+    def adjust_position(self, adjustment: Vector2):
+        """ Adjust the object's position by the adjustment vector """
+
+    def set_position(self, position: Vector2):
+        """ Override the object's position with a new Vector2 """
 
     def update_controller_collisions(self, angle: float):
         """

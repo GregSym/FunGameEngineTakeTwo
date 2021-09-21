@@ -106,7 +106,7 @@ class Object(ObjectTemplate):
 
     def update(self):
         self.get_collision()
-        self.handle_collision()
+        self.handle_collision() 
         self.collision_interacting_event()
         self.physics_model.gravity_update(dt=self.context.dt)
         self.rect.x, self.rect.y = self.physics_model.position
@@ -119,6 +119,12 @@ class Object(ObjectTemplate):
         self.physics_model.velocity = Vector2(0, 0)
         if hard_reset:
             self.physics_model.position = Vector2(0, 0)
+
+    def adjust_position(self, adjustment: Vector2):
+        self.physics_model.position += adjustment * self.context.dt
+
+    def set_position(self, position: Vector2):
+        self.physics_model.position = position
 
     def get_rect(self) -> pygame.Rect:
         return self.rect
