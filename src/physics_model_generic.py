@@ -116,48 +116,61 @@ class PhysicsController(controller_template.ControllerTemplate):
         return
 
     def handle_collision(self):
+        if CollisionKeys.VERTICAL in self.collision:
+            self.collision.pop(CollisionKeys.VERTICAL)
+        if CollisionKeys.HORIZONTAL in self.collision:
+            self.collision.pop(CollisionKeys.HORIZONTAL)
+
+    def calculate_position(self):
+        adjusted_velocity: dict[str, Vector2] = {}
         if CollisionKeys.VERTICAL in self.collision:  # vertical case
+            adjusted_velocity['nullhack'] = Vector2(0, 0)
             if self.physics_model.velocity.y >= 0:
                 # downwards
                 # set can jump here
-                self.physics_model.velocity.y = self.physics_model.get_rect().bottom - \
+                adjusted_velocity['nullhack'].y = self.physics_model.get_rect().bottom - \
                     self.collision[CollisionKeys.VERTICAL].get_rect().top
             else:
                 # upwards
-                self.physics_model.velocity.y = self.physics_model.get_rect().top - \
+                adjusted_velocity['nullhack'].y = self.physics_model.get_rect().top - \
                     self.collision[CollisionKeys.VERTICAL].get_rect().bottom
-            self.physics_model.velocity.y = self.physics_model.velocity.y / self.context.dt
+            self.collision.pop(CollisionKeys.VERTICAL)
         if CollisionKeys.HORIZONTAL in self.collision:  # horizontal case
+            if 'nullhack' not in adjusted_velocity:
+                adjusted_velocity['nullhack'] = Vector2(0, 0)
             if self.physics_model.velocity.x >= 0:
                 # downwards
                 # set can jump here
-                self.physics_model.velocity.x = self.physics_model.get_rect().right - \
+                adjusted_velocity['nullhack'].x = self.physics_model.get_rect().right - \
                     self.collision[CollisionKeys.HORIZONTAL].get_rect().left
             else:
                 # upwards
-                self.physics_model.velocity.x = self.physics_model.get_rect().left - \
+                adjusted_velocity['nullhack'].x = self.physics_model.get_rect().left - \
                     self.collision[CollisionKeys.HORIZONTAL].get_rect().right
-            self.physics_model.velocity.x = self.physics_model.velocity.x / self.context.dt
+            self.collision.pop(CollisionKeys.HORIZONTAL)
+        if 'nullhack' in adjusted_velocity:
+            self.physics_model.position += adjusted_velocity
+            adjusted_velocity.pop('nullhack')
+        else:
+            self.physics_model.position += self.physics_model.velocity * self.context.dt
+
+
 
     def update(self):
         self.input()
         self.calculate_velocity()
+        self.get_collision(current_rect := self.physics_model.get_rect())
+        self.handle_collision()
         self.get_collision(
             rect=(predicted_rect := self.physics_model.predicted_rect(dt=self.context.dt)))
-        self.handle_collision()
         self.physics_model.position = self.physics_model.velocity * self.context.dt
+        self.calculate_position()
 
     def input(self):
         pass
 
     def calculate_velocity(self):
         self.physics_model.velocity += self.physics_model.acceleration * self.context.dt
-
-
-
-        # handle actual position update
-
-        # clear collision items
 
     def gravity_update(self, dt: float):
         if self.physics_model.has_gravity:

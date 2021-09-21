@@ -5,16 +5,17 @@ from src.scene import Layer
 from .templates.event_loop_item import EventLoopItem
 from .context import Context
 
+
 class Camera(EventLoopItem):
 
-    buffer_size = 200
-    tracking_velocity = 50
+    buffer_size = 300
+    tracking_velocity = 150
 
     def __init__(self, context: Context, target: str = 'player') -> None:
         super().__init__()
         self.context = context
         self.target = target
-        self.layer = self.setup() # get layer to track in setup
+        self.layer = self.setup()  # get layer to track in setup
         self.tracked_rect = self.layer.get_rect()
 
     def target_position(self) -> Vector2:
@@ -22,7 +23,7 @@ class Camera(EventLoopItem):
             self.tracked_rect.x,
             self.tracked_rect.y
         )
-    
+
     def setup(self):
         # define buffer
         self.buffer = pygame.Rect(
@@ -40,24 +41,23 @@ class Camera(EventLoopItem):
 
     def update(self):
         self.tracked_rect = self.layer.get_rect()
-        if self.target_position().x >= self.buffer.right:
+        if self.tracked_rect.x >= self.buffer.right:
             self.track(direction=Vector2(1, 0))
-        elif self.target_position().x < self.buffer.left:
+        elif self.tracked_rect.right < self.buffer.left:
             self.track(direction=Vector2(-1, 0))
-        if self.target_position().y >= self.buffer.bottom:
+        if self.tracked_rect.y >= self.buffer.bottom:
             self.track(direction=Vector2(0, 1))
-        elif self.target_position().y < self.buffer.y:
+        elif self.tracked_rect.bottom < self.buffer.y:
             self.track(direction=Vector2(0, -1))
 
     def track(self, direction: Vector2):
         for layer in self.context.scene.values():
             for object in layer.objects:
-                object.adjust_position(adjustment=self.tracking_velocity * direction * (-1))
+                object.adjust_position(adjustment=self.layer.objects[0].get_velocity(
+                ).magnitude() * 2 * direction * (-1))
 
     def loop_logic():
         pass
 
     def draw():
         pass
-
-

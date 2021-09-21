@@ -132,6 +132,9 @@ class Object(ObjectTemplate):
     def get_surface(self) -> pygame.Surface:
         return self.sprite
 
+    def get_velocity(self) -> Vector2:
+        return self.physics_model.velocity
+
 
 if __name__ == "__main__":
     import sys
