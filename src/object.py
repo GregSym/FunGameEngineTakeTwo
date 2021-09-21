@@ -24,6 +24,7 @@ else:
 
 
 from dataclasses import dataclass
+from src.models.collision import CollisionKeys
 from pygame.constants import QUIT
 from pygame.locals import Color
 from typing import Any, Tuple
@@ -31,11 +32,6 @@ from pygame import Vector2, Surface, math, sprite
 import pygame
 import numpy as np
 from enum import Enum, auto
-
-
-class CollisionKeys(Enum):
-    HORIZONTAL = auto()
-    VERTICAL = auto()
 
 
 class Object(ObjectTemplate):
