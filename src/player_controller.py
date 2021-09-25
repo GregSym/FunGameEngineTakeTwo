@@ -9,6 +9,7 @@ else:
 
 from dataclasses import dataclass
 from datetime import timedelta
+from src.physics_model_generic import PhysicsController, PlayerPhysics
 from src.events.action import Action
 
 from pygame import Vector2, event
@@ -52,15 +53,13 @@ class ControllerState:
     right_down_left_up: bool = False
 
 
-class PlayerController(ControllerTemplate):
+class PlayerController(PlayerPhysics):
     """
         Controller for a player character
     """
 
     def __init__(self, context: Context, physics_model: PhysicsModelGeneric, max_velocity_x: int = 70) -> None:
-        super().__init__()
-        self.context = context
-        self.physics_model = physics_model
+        super().__init__(context=context, physics_model=physics_model)
         self.max_velocity_x = max_velocity_x
         self.acceleration_chunk = 200
         # default deceleration due to the virtual friction of the ground
@@ -135,15 +134,27 @@ class PlayerController(ControllerTemplate):
         def _jump():
             self.physics_model.acceleration.y = -400
 
+        def _slow_fall():
+            self.physics_model.acceleration.y = self.context.physics.gravity_constant / 2
+
         if self.state.is_grounded:
             print('doing the jump?')
             self.physics_model.acceleration.y = -400
             self.state.is_grounded = False
+            self.context.add_action(action=Action.do_after_delay(action=_slow_fall, delay=timedelta(seconds=0.5)))
         else:
             self.physics_model.acceleration.y = self.context.physics.gravity_constant / 2
+            print('else being called')
 
     def __jump_keyup(self):
         self.physics_model.acceleration.y = self.context.physics.gravity_constant
+
+    def set_jump(self):
+        self.state.is_grounded = True
+
+    def input(self):
+        super().input()
+        self.get_events()
 
     def get_events(self):
         for event in self.context.events:

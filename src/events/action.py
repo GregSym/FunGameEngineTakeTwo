@@ -73,6 +73,8 @@ class Action:
                 return False
         elif self.state == ActionState.DELAY:
             if datetime.now() >= self.end_time:
+                print('#############')
+                print('action')
                 self.action()
                 return True
             return False

@@ -21,9 +21,8 @@ import pygame
 class Player(Object):
     def __init__(self,
                  context: Context,
-                 dimensions: Vector2 = Vector2(50, 50),
                  physics_model: PhysicsModelGeneric = PhysicsModelGeneric()) -> None:
-        super().__init__(context, dimensions=dimensions, physics_model=physics_model)
+        super().__init__(context, physics_model=physics_model)
         self.sprite.fill(color=Colours.blue)
         self.max_velocity = 500
         self.controller = PlayerController(

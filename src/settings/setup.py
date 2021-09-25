@@ -3,6 +3,7 @@ if __name__ == "__main__":
 else:
     from .settings import Settings
 import pygame
+from pygame import key
 
 def pyGameSetup() -> tuple[int, float, pygame.time.Clock, pygame.Surface]:
     """
@@ -10,6 +11,7 @@ def pyGameSetup() -> tuple[int, float, pygame.time.Clock, pygame.Surface]:
     """
     # Initialise PyGame.
     pygame.init()
+    # key.set_repeat(1, 500) # this will probably be necessary at some point
 
     # Set up the clock. This will tick every frame and thus maintain a relatively constant framerate. Hopefully.
     fps = Settings.fps

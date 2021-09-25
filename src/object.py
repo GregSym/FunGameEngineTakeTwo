@@ -24,6 +24,7 @@ else:
 
 
 from dataclasses import dataclass
+from src.physics_model_generic import PhysicsController
 from src.models.collision import CollisionKeys
 from pygame.constants import QUIT
 from pygame.locals import Color
@@ -45,30 +46,22 @@ class Object(ObjectTemplate):
 
     def __init__(self,
                  context: context.Context,
-                 dimensions: Vector2 = Vector2(50, 50),
                  physics_model: PhysicsModelGeneric = PhysicsModelGeneric()) -> None:
         super().__init__()
         self.context = context
-        self.dimensions = dimensions
-        self.sprite = Surface(size=dimensions)
-        self.sprite.fill(color=(255, 0, 0))
-        self.rect = self.sprite.get_rect()
         self.physics_model = physics_model
         self.setup()
 
     def setup(self):
+        self.controller = PhysicsController(context=self.context, physics_model=self.physics_model)
+        self.sprite = Surface(size=self.physics_model.dimensions)
+        self.sprite.fill(color=(255, 0, 0))
+        self.rect = self.sprite.get_rect()
+        self.rect.x, self.rect.y = self.physics_model.position
         if self.physics_model.has_gravity:
             self.physics_model.acceleration = Vector2(0, 300)
         else:
             self.physics_model.acceleration = Vector2(0, 0)
-
-    def test_collision(self, obj):
-        """
-            manual collision detector, to be privated
-        """
-        if self.physics_model.position.y + self.dimensions.y >= obj.physics_model.position.y:
-            # self.acceleration = Vector2(0, 0)
-            self.__vertical_bounce()
 
     def handle_collision(self):
         if CollisionKeys.VERTICAL in self.collision_objects:
@@ -105,10 +98,11 @@ class Object(ObjectTemplate):
         return
 
     def update(self):
-        self.get_collision()
-        self.handle_collision() 
-        self.collision_interacting_event()
-        self.physics_model.gravity_update(dt=self.context.dt)
+        self.controller.update()
+        # self.get_collision()
+        # self.handle_collision() 
+        # self.collision_interacting_event()
+        # self.physics_model.gravity_update(dt=self.context.dt)
         self.rect.x, self.rect.y = self.physics_model.position
 
     def draw(self):

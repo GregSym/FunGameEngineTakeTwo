@@ -51,6 +51,9 @@ class ObjectTemplate(ABC):
     def set_position(self, position: Vector2):
         """ Override the object's position with a new Vector2 """
 
+    def get_velocity(self) -> Vector2:
+        """ Getter for the object's velocity """
+
     def update_controller_collisions(self, angle: float):
         """
             communicate collision info to the controller, if there is one

@@ -59,8 +59,7 @@ class Engine(MainApp):
 
     def setup(self):
         super().setup()
-        self.objects: list[Object] = [Object(context=self.context, physics_model=PhysicsModelGeneric(has_gravity=True)), Floor(
-            context=self.context, physics_model=PhysicsModelGeneric(position=Vector2(0, 300)))]
+        self.objects: list[Object] = [Object(context=self.context, physics_model=PhysicsModelGeneric(has_gravity=True))]
         self.context.scene['npc'] = Layer(objects=[Object(context=self.context, physics_model=PhysicsModelGeneric(has_gravity=True))])
         self.context.scene['player'] = Layer(objects=[])
         self.context.scene['env'] = Layer(objects=[Floor(
@@ -79,10 +78,8 @@ class Engine(MainApp):
                 sys.exit()  # Not including this line crashes the script on Windows. Possibly
                 # on other operating systems too, but I don't know for sure. - note from template
             if event.type == pygame.MOUSEBUTTONUP:
-                # self.objects.append(Player(context=self.context, physics_model=PhysicsModelGeneric(
-                #     position=Vector2(mouse.get_pos()), velocity=Vector2(0, 0), has_gravity=True)))
-                self.context.scene['player'].objects.append(Player(context=self.context, physics_model=PlayerPhysics(
-                    position=Vector2(mouse.get_pos()), velocity=Vector2(0, 0), has_gravity=True)))
+                self.context.scene['player'].objects.append(Player(context=self.context, physics_model=PhysicsModelGeneric(
+                    position=Vector2(mouse.get_pos()), velocity=Vector2(0, 0), has_gravity=True, acceleration=Vector2(0, 300), has_collision=True)))
 
         for index, action in enumerate(self.context.actions):
             """ Handles actions and deletes once executed """
@@ -101,9 +98,7 @@ class Engine(MainApp):
         # Redraw screen here.
         for layer in self.context.scene.values():
             for object in layer.objects:
-            #object.context = self.context
                 object.draw()
-
         # Flip the display so that the things we drew actually show up.
         pygame.display.flip()
 
