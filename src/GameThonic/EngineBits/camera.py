@@ -1,7 +1,7 @@
 import pygame
 from pygame.math import Vector2
 from pygame.rect import Rect
-from src.scene import Layer
+from EngineBits.scene import Layer
 from .templates.event_loop_item import EventLoopItem
 from .context import Context
 

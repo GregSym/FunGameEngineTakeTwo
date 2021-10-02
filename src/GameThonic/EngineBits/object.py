@@ -24,8 +24,8 @@ else:
 
 
 from dataclasses import dataclass
-from src.physics_model_generic import PhysicsController
-from src.models.collision import CollisionKeys
+from EngineBits.physics_model_generic import PhysicsController
+from EngineBits.models.collision import CollisionKeys
 from pygame.constants import QUIT
 from pygame.locals import Color
 from typing import Any, Tuple

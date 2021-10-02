@@ -1,10 +1,10 @@
 
 from .models.collision import CollisionKeys, CollisionKeysDetailed, CollisionState
-from src.templates.object_template import ObjectTemplate
+from EngineBits.templates.object_template import ObjectTemplate
 import numpy as np
-from src.functions.direction import PhysxCalculations
+from EngineBits.functions.direction import PhysxCalculations
 import pygame
-from src.context import Context
+from EngineBits.context import Context
 if __name__ == "__main__":
     from templates import controller_template
 else:

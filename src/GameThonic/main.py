@@ -1,19 +1,19 @@
 # Import standard modules.
 from datetime import timedelta
-from src.camera import Camera
-from src.templates.event_loop_item import EventLoopImplementation, EventLoopMultithreadedDraw
-from src.scene import Layer, Scene
-from src.events.action import Action
-from src.settings.setup import pyGameSetup
+from EngineBits.camera import Camera
+from EngineBits.templates.event_loop_item import EventLoopImplementation, EventLoopMultithreadedDraw
+from EngineBits.scene import Layer, Scene
+from EngineBits.events.action import Action
+from EngineBits.settings.setup import pyGameSetup
 from pygame import event
-from src.player import Player
-from src.settings.settings import Settings
-from src.physics_model_generic import PhysicsModelGeneric, PlayerPhysics
+from EngineBits.player import Player
+from EngineBits.settings.settings import Settings
+from EngineBits.physics_model_generic import PhysicsModelGeneric, PlayerPhysics
 from pygame.math import Vector2
-from src.floor import Floor
-from src.object import Object
-from src.context import Context, SurfaceInfo
-from src.templates.main_template import AppTemplate
+from EngineBits.floor import Floor
+from EngineBits.object import Object
+from EngineBits.context import Context, SurfaceInfo
+from EngineBits.templates.main_template import AppTemplate
 from typing import Any
 import sys
 

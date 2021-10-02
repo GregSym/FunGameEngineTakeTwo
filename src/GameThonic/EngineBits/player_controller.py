@@ -5,12 +5,12 @@ if __name__ == "__main__":
 else:
     from .templates.controller_template import ControllerTemplate
     from .context import Context
-    from src.physics_model_generic import PhysicsModelGeneric
+    from EngineBits.physics_model_generic import PhysicsModelGeneric
 
 from dataclasses import dataclass
 from datetime import timedelta
-from src.physics_model_generic import PhysicsController, PlayerPhysics
-from src.events.action import Action
+from EngineBits.physics_model_generic import PhysicsController, PlayerPhysics
+from EngineBits.events.action import Action
 
 from pygame import Vector2, event
 import pygame

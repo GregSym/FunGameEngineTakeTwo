@@ -13,7 +13,7 @@ else:
     from .constants.colours import Colours
 
 import numpy as np
-from src.player_controller import PlayerController
+from EngineBits.player_controller import PlayerController
 from pygame import Vector2, event
 import pygame
 
