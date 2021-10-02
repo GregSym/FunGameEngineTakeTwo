@@ -3,9 +3,10 @@ if __name__ == "__main__":
 else:
     from .settings import Settings
 import pygame
+from pygame import surface, display
 
 
-def pyGameSetup() -> tuple[float, int, pygame.time.Clock, pygame.Surface]:
+def pyGameSetup() -> tuple[float, int, pygame.time.Clock, surface.Surface]:
     """
         Generic method for pygame init
     """
@@ -19,7 +20,7 @@ def pyGameSetup() -> tuple[float, int, pygame.time.Clock, pygame.Surface]:
 
     # Set up the window.
     width, height = Settings.resolution
-    screen = pygame.display.set_mode((width, height))
+    screen = display.set_mode((width, height))
 
     # screen is the surface representing the window.
     # PyGame surfaces can be thought of as screen sections that you can draw onto.

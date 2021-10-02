@@ -30,6 +30,7 @@ from pygame.constants import QUIT
 from pygame.locals import Color
 from typing import Any, Tuple
 from pygame import Vector2, Surface, math, sprite
+from pygame.rect import Rect
 import pygame
 import numpy as np
 from enum import Enum, auto
@@ -120,7 +121,7 @@ class Object(ObjectTemplate):
     def set_position(self, position: Vector2):
         self.physics_model.position = position
 
-    def get_rect(self) -> pygame.Rect:
+    def get_rect(self) -> Rect:
         return self.rect
 
     def get_surface(self) -> pygame.Surface:

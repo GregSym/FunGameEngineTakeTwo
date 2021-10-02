@@ -2,7 +2,7 @@
 from abc import ABC, abstractmethod
 from concurrent.futures import Future
 from concurrent.futures.thread import ThreadPoolExecutor
-from typing import NoReturn
+from typing import Any, NoReturn
 import asyncio
 
 
@@ -12,7 +12,7 @@ class EventLoopItem(ABC):
     """
 
     @abstractmethod
-    def setup():
+    def setup(self):
         """
             run before the start of the loop
              - sets up some initial state
@@ -20,20 +20,20 @@ class EventLoopItem(ABC):
         """
 
     @abstractmethod
-    def loop_logic():
+    def loop_logic(self):
         """
             update and draw are called iteratively inside this function
         """
 
     @abstractmethod
-    def update():
+    def update(self):
         """
             The main method to be called iteratively as part of the
             event loop
         """
 
     @abstractmethod
-    def draw():
+    def draw(self):
         """
             A particular section of the update seperated out from update
             because the graphics API shouldn't be too deeply entangled with
@@ -60,7 +60,7 @@ class EventLoopImplementation(EventLoopItem):
 
 class EventLoopMultithreadedDraw(EventLoopImplementation):
     def loop_logic(self):
-        processes: list[Future] = []
+        processes: list[Future[Any]] = []
         with ThreadPoolExecutor() as executor:
             processes.append(executor.submit(lambda: self.update()))
             processes.append(executor.submit(lambda: self.draw()))
@@ -80,7 +80,11 @@ class EventLoopAsync(EventLoopItem):
         while True:
             await self.loop_logic()
 
-    def run(self) -> NoReturn:
+    def run(self):
         self.setup()
         loop = asyncio.get_event_loop()
-        loop.run_forever(self.loop_logic())
+        asyncio.ensure_future(self.loop_logic())
+        try:
+            loop.run_forever()
+        finally:
+            loop.close()

@@ -10,37 +10,37 @@ class ObjectTemplate(ABC):
     """
 
     @abstractmethod
-    def setup():
+    def setup(self):
         """
             setup the object's initial state
         """
 
     @abstractmethod
-    def update():
+    def update(self):
         """
             Perform operations based on the latest scenario presented by the engine
         """
 
     @abstractmethod
-    def draw():
+    def draw(self):
         """
             Draw the latest version of the object's state
         """
 
     @abstractmethod
-    def reset():
+    def reset(self):
         """
             Reset the object parameters to default
         """
 
     @abstractmethod
-    def get_rect() -> pygame.Rect:
+    def get_rect(self) -> pygame.Rect:
         """
             Getter for the item's rect
         """
 
     @abstractmethod
-    def get_surface() -> pygame.Surface:
+    def get_surface(self) -> pygame.Surface:
         """
             Getter for the item's surface
         """

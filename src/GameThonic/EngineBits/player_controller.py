@@ -58,12 +58,12 @@ class PlayerController(PlayerPhysics):
         Controller for a player character
     """
 
-    def __init__(self, context: Context, physics_model: PhysicsModelGeneric, max_velocity_x: int = 70) -> None:
+    def __init__(self, context: Context, physics_model: PhysicsModelGeneric, max_velocity_x: float = 70) -> None:
         super().__init__(context=context, physics_model=physics_model)
         self.max_velocity_x = max_velocity_x
-        self.acceleration_chunk = 200
+        self.acceleration_chunk: float = 200
         # default deceleration due to the virtual friction of the ground
-        self.deceleration = self.acceleration_chunk * 2
+        self.deceleration: float = self.acceleration_chunk * 2
         self.state = ControllerState()
         self.move_left = KeyBinding(key=pygame.K_a, key_action=KeyAction(key_down=lambda: self.__move_horizontal_keydown(
             direction='left'), key_up=lambda: self.__move_horizontal_keyup(direction='left')))

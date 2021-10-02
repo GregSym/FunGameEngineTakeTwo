@@ -6,7 +6,7 @@ from pygame.math import Vector2
 from pygame.rect import Rect
 
 
-def rect_corners(rect: pygame.Rect) -> list[pygame.Vector2]:
+def rect_corners(rect: pygame.Rect) -> list[Vector2]:
     return [
         Vector2(rect.topleft), Vector2(rect.topright),
         Vector2(rect.bottomleft), Vector2(rect.bottomright)]
@@ -75,10 +75,11 @@ class PhysxCalculations:
         unit_vector1 = vector1.normalize()  # vector / |vector|
         unit_vector2 = vector2.normalize()
         # similar performance to pygame version
-        return np.arccos(np.clip(np.dot(unit_vector1, unit_vector2), -1, 1))
+        angle: float = np.arccos(np.clip(np.dot(unit_vector1, unit_vector2), -1, 1))  # unclear return type here apparently
+        return angle
 
     @staticmethod
-    def boundary_calculation(angles: FourAngles):
+    def boundary_calculation(angles: FourAngles) -> CollisionSide:
         print([angle / np.pi for angle in asdict(angles).values()])
         if angles.top_left < BoundaryConditions.FORTYFIVE.value and angles.bottom_left > 0:
             return CollisionSide.RIGHT
@@ -119,5 +120,5 @@ if __name__ == "__main__":
     print(test.angle_to(x_axis) * -np.pi / 180 if test.angle_to(x_axis) * -np.pi / 180 >= 0 else test.angle_to(x_axis) * -np.pi / 180 + 2*np.pi)
 
     rect1 = pygame.Rect(9, 8, 5, 5)
-    rect2 = Rect(4, 4, 6, 6)
+    rect2 = pygame.Rect(4, 4, 6, 6)
     print(PhysxCalculations.relative_position(rect1=rect1, rect2=rect2))

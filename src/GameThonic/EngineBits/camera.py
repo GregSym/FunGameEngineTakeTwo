@@ -37,7 +37,7 @@ class Camera(EventLoopItem):
         for layer_key in self.context.scene.keys():
             if layer_key == self.target:
                 return self.context.scene[layer_key]
-        return Layer()
+        return Layer(objects=[])
 
     def update(self):
         self.tracked_rect = self.layer.get_rect()

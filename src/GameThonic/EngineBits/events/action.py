@@ -97,7 +97,7 @@ class Action:
 
 if __name__ == "__main__":
 
-    def test_bool():
+    def test_bool() -> bool:
         return True
 
     event1 = Action.do_until(action=lambda: print("hi"),

@@ -18,7 +18,8 @@ from typing import Any
 import pygame
 
 from pygame.time import Clock
-from pygame import Surface, event
+from pygame.surface import Surface
+from pygame import event
 
 # NOTE: some of this may well run better with dicts, apparently, but I don't get
 # linting from that so...no. Well, maybe later, actually

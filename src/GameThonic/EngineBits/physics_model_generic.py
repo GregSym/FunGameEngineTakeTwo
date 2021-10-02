@@ -15,7 +15,7 @@ else:
 
 
 from dataclasses import asdict, dataclass
-from pygame import Vector2
+from pygame.math import Vector2
 
 
 @dataclass
