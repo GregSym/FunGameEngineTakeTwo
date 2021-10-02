@@ -110,6 +110,20 @@ class PhysxCalculations:
                 return True
         return False
 
+    @staticmethod
+    def collision_com(rect1: pygame.Rect, rect2: pygame.Rect) -> CollisionSide:
+        if rect2.left <= rect1.centerx <= rect2.right:  # vertical collision
+            if rect1.centery <= rect2.top:
+                return CollisionSide.BOTTOM
+            if rect1.centery >= rect2.bottom:
+                return CollisionSide.TOP
+        
+        else:
+            if rect1.centerx <= rect2.left:
+                return CollisionSide.RIGHT
+            if rect1.centerx >= rect2.right:
+                return CollisionSide.LEFT
+
 
 if __name__ == "__main__":
     print(np.arctan([np.tan(angle.value)

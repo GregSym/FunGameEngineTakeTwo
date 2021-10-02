@@ -48,20 +48,20 @@ def test_collision_direction_general(rect: Rect, side: CollisionSide):
 
     def assertion() -> bool:
         test_rect = Rect(topleft.x, topleft.y, width, height)
-        return PhysxCalculations.relative_position(rect1=test_rect, rect2=rect) == side
+        assert PhysxCalculations.collision_com(rect1=test_rect, rect2=rect) == side
 
     if side == CollisionSide.BOTTOM:
         topleft.y -= random.randint(1, height)
-        assert assertion()
+        assertion()
     elif side == CollisionSide.TOP:
         topleft.y += random.randint(int(rect.height * 3 / 4), rect.height)
-        assert assertion()
+        assertion()
     elif side == CollisionSide.RIGHT:
         topleft.x -= random.randint(0, width)
-        assert assertion()
+        assertion()
     elif side == CollisionSide.LEFT:
         topleft.x = random.randint(int(rect.right - width / 2), rect.right)
-        assert assertion()
+        assertion()
     else:
         print(" FAILURE IN TESTING PROTOCOL ")
         assert False
