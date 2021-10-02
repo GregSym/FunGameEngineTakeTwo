@@ -39,7 +39,7 @@ def test_collision_direction():
     assert PhysxCalculations.relative_position(rect1=rect1, rect2=rect2) == CollisionSide.BOTTOM
 
 
-@pytest.mark.parametrize(["rect", "side"], rect_side_list_generator(limit=25))
+@pytest.mark.parametrize(["rect", "side"], rect_side_list_generator(limit=100))
 def test_collision_direction_general(rect: Rect, side: CollisionSide):
     """ More intensive testing, making some rect package assumptions """
     topleft = Vector2(rect.x, rect.y)
