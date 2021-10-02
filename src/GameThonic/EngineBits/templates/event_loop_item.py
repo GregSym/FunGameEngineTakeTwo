@@ -1,6 +1,6 @@
 
 from abc import ABC, abstractmethod
-from concurrent.futures import ProcessPoolExecutor, Future
+from concurrent.futures import Future
 from concurrent.futures.thread import ThreadPoolExecutor
 from typing import NoReturn
 import asyncio
@@ -28,7 +28,7 @@ class EventLoopItem(ABC):
     @abstractmethod
     def update():
         """
-            The main method to be called iteratively as part of the 
+            The main method to be called iteratively as part of the
             event loop
         """
 
@@ -68,6 +68,7 @@ class EventLoopMultithreadedDraw(EventLoopImplementation):
                 if not p.running():
                     processes.pop(index)
             print(len(processes))
+
 
 class EventLoopAsync(EventLoopItem):
     async def loop_logic(self):

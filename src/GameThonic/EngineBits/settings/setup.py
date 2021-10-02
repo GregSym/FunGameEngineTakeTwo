@@ -3,9 +3,9 @@ if __name__ == "__main__":
 else:
     from .settings import Settings
 import pygame
-from pygame import key
 
-def pyGameSetup() -> tuple[int, float, pygame.time.Clock, pygame.Surface]:
+
+def pyGameSetup() -> tuple[float, int, pygame.time.Clock, pygame.Surface]:
     """
         Generic method for pygame init
     """

@@ -1,5 +1,6 @@
 from abc import ABC
 
+
 class ControllerTemplate(ABC):
 
     def key_response():

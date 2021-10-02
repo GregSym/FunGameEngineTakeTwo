@@ -4,6 +4,7 @@
 """
 from dataclasses import dataclass
 
+
 @dataclass
 class Settings:
     fps = 144

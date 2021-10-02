@@ -8,10 +8,12 @@ class CollisionEvent:
     has_vertical_collision: bool
     has_horizontal_collision: bool
 
+
 class CollisionKeys(enum.Enum):
     """ Simplest possible tags for use in collision dicts by game objects and controllers """
     HORIZONTAL = enum.auto()
     VERTICAL = enum.auto()
+
 
 class CollisionKeysDetailed(enum.Enum):
     """ 4 directional tags for use in collision dicts by game objects and controllers """

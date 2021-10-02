@@ -56,8 +56,8 @@ class Camera(EventLoopItem):
                 object.adjust_position(adjustment=self.layer.objects[0].get_velocity(
                 ).magnitude() * 2 * direction * (-1))
 
-    def loop_logic():
+    def loop_logic(self):
         pass
 
-    def draw():
+    def draw(self):
         pass

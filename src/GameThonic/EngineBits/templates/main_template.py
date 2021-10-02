@@ -1,6 +1,7 @@
 
 import abc
 
+
 class AppTemplate(abc.ABC):
     """
         The abstract base class defining the behaviour of a generic app based around
@@ -8,26 +9,26 @@ class AppTemplate(abc.ABC):
     """
 
     @abc.abstractmethod
-    def setup():
+    def setup(self):
         """
             Setup the app's initial state and contents
         """
 
     @abc.abstractmethod
-    def update():
+    def update(self):
         """
             Handle events
             Handle the change in screen img
         """
 
     @abc.abstractmethod
-    def draw():
+    def draw(self):
         """
         Draw things to the window. Called once per frame.
         """
-        
+
     @abc.abstractmethod
-    def run():
+    def run(self):
         """
             Runs the application
         """

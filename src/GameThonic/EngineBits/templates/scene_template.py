@@ -1,5 +1,6 @@
 from abc import ABC
 
+
 class SceneTemplate(ABC):
     """
         Abstract Base Class of a controller object for handling tasks that need to be applied

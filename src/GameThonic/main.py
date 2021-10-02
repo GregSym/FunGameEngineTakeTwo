@@ -9,7 +9,7 @@ from pygame import event
 from EngineBits.player import Player
 from EngineBits.settings.settings import Settings
 from EngineBits.physics_model_generic import PhysicsModelGeneric, PlayerPhysics
-from pygame.math import Vector2
+from pygame import Vector2
 from EngineBits.floor import Floor
 from EngineBits.object import Object
 from EngineBits.context import Context, SurfaceInfo
@@ -20,7 +20,7 @@ import sys
 # Import non-standard modules.
 import pygame
 from pygame.locals import *
-from pygame import mouse
+from pygame import mouse, QUIT
 
 
 class MainApp(AppTemplate):
@@ -36,7 +36,6 @@ class MainApp(AppTemplate):
             events=event.get(), actions=[], scene={})  
 
     def loop_logic(self):
-        super().loop_logic()
         # NOTE: .tick method returns milliseconds, hence /1000
         self.context.dt = self.context.clock.tick(self.context.fps) / 1000
         print(self.context.dt)
