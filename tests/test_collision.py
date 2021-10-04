@@ -51,13 +51,13 @@ def test_collision_direction_general(rect: Rect, side: CollisionSide):
         assert PhysxCalculations.collision_com(rect1=test_rect, rect2=rect) == side
 
     if side == CollisionSide.BOTTOM:
-        topleft.y -= random.randint(1, height)
+        topleft.y -= random.randint(int(height / 2 if height <= rect.height else height - 1), height)
         assertion()
     elif side == CollisionSide.TOP:
-        topleft.y += random.randint(int(rect.height * 3 / 4), rect.height)
+        topleft.y = random.randint(int(rect.bottom - min(height / 2, rect.height / 2)), rect.bottom)
         assertion()
     elif side == CollisionSide.RIGHT:
-        topleft.x -= random.randint(0, width)
+        topleft.x -= random.randint(int(width / 2), width)
         assertion()
     elif side == CollisionSide.LEFT:
         topleft.x = random.randint(int(rect.right - width / 2), rect.right)

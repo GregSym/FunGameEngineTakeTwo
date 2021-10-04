@@ -4,12 +4,10 @@ import numpy as np
 import pygame
 from pygame.math import Vector2
 from pygame.rect import Rect
-
-
-def rect_corners(rect: pygame.Rect) -> list[Vector2]:
-    return [
-        Vector2(rect.topleft), Vector2(rect.topright),
-        Vector2(rect.bottomleft), Vector2(rect.bottomright)]
+try:
+    from functions.rect_wrapper import rect_all_points, rect_corners
+except ModuleNotFoundError:
+    from GameThonic.EngineBits.functions.rect_wrapper import rect_all_points, rect_corners
 
 
 class BoundaryConditions(Enum):
@@ -46,6 +44,17 @@ class CollisionSide(Enum):
     TOP = auto()
     BOTTOM = auto()
     UNDEFINED = auto()  # maybe don't want this one
+
+
+def index_to_side(index: int) -> CollisionSide:
+    if index == 0:
+        return CollisionSide.BOTTOM
+    if index == 1:
+        return CollisionSide.TOP
+    if index == 2:
+        return CollisionSide.RIGHT
+    if index == 3:
+        return CollisionSide.LEFT
 
 
 class PhysxCalculations:
@@ -94,6 +103,7 @@ class PhysxCalculations:
 
     @staticmethod
     def relative_position(rect1: pygame.Rect, rect2: pygame.Rect) -> CollisionSide:
+        """ determine relative position using triangulation between rect corners """
         x_axis = Vector2(1, 0)
         ref_vector = Vector2(rect1.x, rect1.y)
         triangulation_vectors: list[Vector2] = []
@@ -112,17 +122,71 @@ class PhysxCalculations:
 
     @staticmethod
     def collision_com(rect1: pygame.Rect, rect2: pygame.Rect) -> CollisionSide:
+        """ Determine relative position using relative position of the center of mass of rect1
+            - relative position to rect1, eg. rect1 left of rect2 -> CollisionSide.RIGHT
+        """
         if rect2.left <= rect1.centerx <= rect2.right:  # vertical collision
             if rect1.centery <= rect2.top:
                 return CollisionSide.BOTTOM
             if rect1.centery >= rect2.bottom:
                 return CollisionSide.TOP
-        
+
         else:
             if rect1.centerx <= rect2.left:
                 return CollisionSide.RIGHT
             if rect1.centerx >= rect2.right:
                 return CollisionSide.LEFT
+
+        def local_converter(relative_sides: list[int]) -> CollisionSide:
+            for index, side in enumerate(relative_sides):
+                if side == min(relative_sides):
+                    return index_to_side(index=index)
+
+        # alt backup determination
+        side_distances = [relative_vector for relative_vector in [rect2.top - rect2.centery,
+                                                                  rect2.bottom - rect1.centery,
+                                                                  rect2.left - rect1.centerx,
+                                                                  rect2.right - rect1.centerx]]
+        return local_converter(relative_sides=side_distances)
+
+        # backup determination
+        # offset_of_centers = Vector2(rect2.center) - Vector2(rect1.center)
+        # if max(abs(offset_of_centers.x), abs(offset_of_centers.y)) == abs(offset_of_centers.x):
+        #     # more horizontal offset
+        #     if offset_of_centers.x < 0:
+        #         return CollisionSide.RIGHT
+        #     return CollisionSide.LEFT
+        # # vertical offset
+        # if offset_of_centers.y < 0:
+        #     return CollisionSide.BOTTOM
+        # return CollisionSide.TOP
+
+    @staticmethod
+    def collision_combination(rect1: Rect, rect2: Rect) -> CollisionSide:
+        triangulation = PhysxCalculations.relative_position(rect1, rect2)
+        centre_of_mass = PhysxCalculations.collision_com(rect1, rect2)
+        return triangulation if triangulation != CollisionSide.UNDEFINED else centre_of_mass
+
+    @staticmethod
+    def collision_full_frame(rect1: Rect, rect2: Rect) -> CollisionSide:
+        """ relativity using all available points """
+        store_all_points_rect1 = rect_all_points(rect1)
+        store_all_points = rect_all_points(rect2)  # only run this once
+        right_positioned = [point for point in store_all_points if point.x >= rect1.centerx]
+        bottom_positioned = [point for point in store_all_points if point.y >= rect1.centery]
+        if len(bottom_positioned) > len(store_all_points) - len(bottom_positioned):
+            return CollisionSide.BOTTOM
+        if len(right_positioned) >= len(store_all_points) - len(right_positioned):
+            return CollisionSide.LEFT
+
+        mass_totals = [
+            len(bottom_positioned),
+            len(store_all_points) - len(bottom_positioned),
+            len(store_all_points) - len(right_positioned),
+            len(right_positioned)]
+        for index, mass_total in enumerate(mass_totals):
+            if mass_total == max(mass_totals):
+                return index_to_side(index)
 
 
 if __name__ == "__main__":
