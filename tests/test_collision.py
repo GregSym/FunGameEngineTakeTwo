@@ -60,7 +60,7 @@ def test_collision_direction_general(rect: Rect, side: CollisionSide):
         topleft.x -= random.randint(int(width / 2), width)
         assertion()
     elif side == CollisionSide.LEFT:
-        topleft.x = random.randint(int(rect.right - width / 2), rect.right)
+        topleft.x = random.randint(int(rect.right - min(width / 2, rect.width / 2)), rect.right)
         assertion()
     else:
         print(" FAILURE IN TESTING PROTOCOL ")

@@ -131,11 +131,31 @@ class PhysxCalculations:
             if rect1.centery >= rect2.bottom:
                 return CollisionSide.TOP
 
-        else:
-            if rect1.centerx <= rect2.left:
-                return CollisionSide.RIGHT
-            if rect1.centerx >= rect2.right:
-                return CollisionSide.LEFT
+
+        #  alt case where rect2 is smaller
+        if rect1.left <= rect2.centerx <= rect1.right:
+            if rect2.centery <= rect1.top:
+                return CollisionSide.TOP
+            if rect2.centery >= rect1.bottom:
+                return CollisionSide.BOTTOM
+
+        alt_result = PhysxCalculations.collision_full_frame_alt(rect1, rect2)
+        # if alt_result != CollisionSide.TOP:
+        #     return alt_result
+
+        if rect1.centerx <= rect2.left:
+            return CollisionSide.RIGHT
+        if rect1.centerx >= rect2.right:
+            if rect1.centery <= rect2.top:
+                return CollisionSide.BOTTOM
+            if rect1.centery >= rect2.bottom:
+                return CollisionSide.TOP if alt_result == CollisionSide.TOP else CollisionSide.LEFT
+            return CollisionSide.LEFT
+        
+        if rect2.centerx <= rect1.left:
+            return CollisionSide.LEFT
+        if rect2.centerx >= rect1.right:
+            return CollisionSide.RIGHT
 
         def local_converter(relative_sides: list[int]) -> CollisionSide:
             for index, side in enumerate(relative_sides):
@@ -148,18 +168,6 @@ class PhysxCalculations:
                                                                   rect2.left - rect1.centerx,
                                                                   rect2.right - rect1.centerx]]
         return local_converter(relative_sides=side_distances)
-
-        # backup determination
-        # offset_of_centers = Vector2(rect2.center) - Vector2(rect1.center)
-        # if max(abs(offset_of_centers.x), abs(offset_of_centers.y)) == abs(offset_of_centers.x):
-        #     # more horizontal offset
-        #     if offset_of_centers.x < 0:
-        #         return CollisionSide.RIGHT
-        #     return CollisionSide.LEFT
-        # # vertical offset
-        # if offset_of_centers.y < 0:
-        #     return CollisionSide.BOTTOM
-        # return CollisionSide.TOP
 
     @staticmethod
     def collision_combination(rect1: Rect, rect2: Rect) -> CollisionSide:
@@ -184,6 +192,23 @@ class PhysxCalculations:
             len(store_all_points) - len(bottom_positioned),
             len(store_all_points) - len(right_positioned),
             len(right_positioned)]
+        for index, mass_total in enumerate(mass_totals):
+            if mass_total == max(mass_totals):
+                return index_to_side(index)
+
+    @staticmethod
+    def collision_full_frame_alt(rect1: Rect, rect2: Rect) -> CollisionSide:
+        """ relativity using all available points *alt """
+        store_all_points = rect_all_points(rect1)  # only run this once
+        points_above_rect2 = [point for point in store_all_points if point.y <= rect2.top]
+        points_below_rect2 = [point for point in store_all_points if point.y >= rect2.bottom]
+        points_left_rect2 = [point for point in store_all_points if point.x <= rect2.left]
+        points_right_rect2 = [point for point in store_all_points if point.x >= rect2.right]
+
+        mass_totals = [len(points_above_rect2),
+                       len(points_below_rect2),
+                       len(points_left_rect2),
+                       len(points_right_rect2)]
         for index, mass_total in enumerate(mass_totals):
             if mass_total == max(mass_totals):
                 return index_to_side(index)

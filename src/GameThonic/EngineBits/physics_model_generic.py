@@ -1,8 +1,9 @@
 
+from collections import deque
 from .models.collision import CollisionKeys, CollisionKeysDetailed, CollisionState
 from EngineBits.templates.object_template import ObjectTemplate
 import numpy as np
-from EngineBits.functions.direction import PhysxCalculations
+from EngineBits.functions.direction import CollisionSide, PhysxCalculations
 import pygame
 from EngineBits.context import Context
 if __name__ == "__main__":
@@ -97,6 +98,7 @@ class PhysicsController(controller_template.ControllerTemplate):
     collision_target = 'env'
     collision: dict[CollisionKeys, ObjectTemplate] = {}
     collision_state = CollisionState.MOMENTUM
+    collisions = deque[dict[CollisionSide, ObjectTemplate]]
 
     def __init__(self, context: Context, physics_model: PhysicsModelGeneric = PhysicsModelGeneric()) -> None:
         self.context = context
