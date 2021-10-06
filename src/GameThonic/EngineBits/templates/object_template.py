@@ -44,6 +44,11 @@ class ObjectTemplate(ABC):
         """
             Getter for the item's surface
         """
+    
+    @abstractmethod
+    @property
+    def model(self):
+        """ Getter for physics model """
 
     def adjust_position(self, adjustment: Vector2):
         """ Adjust the object's position by the adjustment vector """

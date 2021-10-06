@@ -130,6 +130,10 @@ class Object(ObjectTemplate):
     def get_velocity(self) -> Vector2:
         return self.physics_model.velocity
 
+    @property
+    def model(self) -> PhysicsModelGeneric:
+        return self.physics_model
+
 
 if __name__ == "__main__":
     import sys
