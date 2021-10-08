@@ -1,5 +1,6 @@
 from dataclasses import asdict, dataclass
 from enum import Enum, auto
+from typing import Protocol
 import numpy as np
 import pygame
 from pygame.math import Vector2
@@ -44,6 +45,11 @@ class CollisionSide(Enum):
     TOP = auto()
     BOTTOM = auto()
     UNDEFINED = auto()  # maybe don't want this one
+
+
+class _CollisionFunctionType(Protocol):
+    def __call__(self, rect1: Rect, rect2: Rect) -> CollisionSide:
+        """ A function type that takes in two rects and returns a collision direction """
 
 
 def index_to_side(index: int) -> CollisionSide:
@@ -131,7 +137,6 @@ class PhysxCalculations:
             if rect1.centery >= rect2.bottom:
                 return CollisionSide.TOP
 
-
         #  alt case where rect2 is smaller
         if rect1.left <= rect2.centerx <= rect1.right:
             if rect2.centery <= rect1.top:
@@ -151,7 +156,7 @@ class PhysxCalculations:
             if rect1.centery >= rect2.bottom:
                 return CollisionSide.TOP if alt_result == CollisionSide.TOP else CollisionSide.LEFT
             return CollisionSide.LEFT
-        
+
         if rect2.centerx <= rect1.left:
             return CollisionSide.LEFT
         if rect2.centerx >= rect1.right:
@@ -212,6 +217,21 @@ class PhysxCalculations:
         for index, mass_total in enumerate(mass_totals):
             if mass_total == max(mass_totals):
                 return index_to_side(index)
+
+    @staticmethod
+    def get_collision(rect: Rect,
+                      target_rects: list[Rect],
+                      collision_function: _CollisionFunctionType) -> dict[CollisionSide, CollisionSide]:
+        """ Creates a full 2D collision event for a given rect and target group of rects """
+        collision_event: dict[CollisionSide, CollisionSide] = {}
+        collision_side: list[CollisionSide] = [
+            collision_function(rect1=rect, rect2=_rect) for _rect in target_rects if rect.colliderect(_rect)]
+        for side in collision_side:
+            if side not in collision_event:
+                collision_event[side] = side
+            if len([collision_event.keys()]) == 4:
+                return collision_event
+        return collision_event
 
 
 if __name__ == "__main__":

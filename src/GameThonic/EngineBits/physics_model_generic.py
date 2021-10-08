@@ -92,6 +92,21 @@ class PhysicsModelGeneric:
         pass
 
 
+class CollisionHandler:
+    def __init__(self, model: PhysicsModelGeneric, target: str, context: Context) -> None:
+        self.model = model
+        self.target = target
+        self.context = context
+
+    def get_collision(self):
+        return PhysxCalculations.get_collision(
+            rect=self.model.rect, target_rects={
+                id: layer for (id, layer) in self.context.scene.items() if id == self.target
+            }.get(self.target).objects,
+            collision_function=PhysxCalculations.collision_com
+        )
+
+
 class PhysicsController(controller_template.ControllerTemplate):
 
     detection_buffer = 10
