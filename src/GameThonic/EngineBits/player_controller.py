@@ -3,12 +3,12 @@ if __name__ == "__main__":
     from physics_model_generic import PhysicsModelGeneric
 else:
     from .context import Context
-    from EngineBits.physics_model_generic import PhysicsModelGeneric
+    from enginebits.physics_model_generic import PhysicsModelGeneric
 
 from dataclasses import dataclass
 from datetime import timedelta
-from EngineBits.physics_model_generic import PlayerPhysics
-from EngineBits.events.action import Action
+from enginebits.physics_model_generic import PlayerPhysics
+from enginebits.events.action import Action
 
 from pygame import event
 import pygame

@@ -1,11 +1,11 @@
 
 from collections import deque
 from .models.collision import CollisionKeys, CollisionState
-from EngineBits.templates.object_template import ObjectTemplate
+from enginebits.templates.object_template import ObjectTemplate
 import numpy as np
-from EngineBits.functions.direction import CollisionSide, PhysxCalculations
+from enginebits.functions.direction import CollisionSide, PhysxCalculations
 import pygame
-from EngineBits.context import Context
+from enginebits.context import Context
 if __name__ == "__main__":
     from templates import controller_template
 else:

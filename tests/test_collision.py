@@ -3,7 +3,9 @@ import random
 from pygame.math import Vector2
 import pytest
 from pygame.rect import Rect
-from gamethonic.EngineBits.functions import direction, random_item_generation
+import functions
+from gamethonic.enginebits.functions import direction
+from gamethonic.enginebits.functions import random_item_generation
 
 rect_side_list = [
     (Rect(0, 0, 4, 8), direction.CollisionSide.TOP),
@@ -51,10 +53,10 @@ def test_collision_direction_general(rect: Rect, side: direction.CollisionSide):
         test_rect = Rect(topleft.x, topleft.y, width, height)
         detected = direction.PhysxCalculations.collision_com(rect1=test_rect, rect2=rect)
         assert detected == side if not (
-            side == direction.CollisionSide.LEFT or side \
-                == direction.CollisionSide.RIGHT and detected \
-                == direction.CollisionSide.TOP or detected \
-                == direction.CollisionSide.BOTTOM
+            side == direction.CollisionSide.LEFT
+            or side == direction.CollisionSide.RIGHT
+            and detected == direction.CollisionSide.TOP
+            or detected == direction.CollisionSide.BOTTOM
         ) else True
 
     if side == direction.CollisionSide.BOTTOM:

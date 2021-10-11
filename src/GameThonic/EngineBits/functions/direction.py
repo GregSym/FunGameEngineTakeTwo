@@ -5,7 +5,7 @@ import numpy as np
 import pygame
 from pygame.math import Vector2
 from pygame.rect import Rect
-from gamethonic.EngineBits.functions.rect_wrapper import rect_all_points, rect_corners
+from gamethonic.enginebits.functions.rect_wrapper import rect_all_points, rect_corners
 
 
 class BoundaryConditions(Enum):

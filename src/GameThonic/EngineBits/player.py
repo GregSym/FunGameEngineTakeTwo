@@ -13,7 +13,7 @@ else:
     from .constants.colours import Colours
 
 import numpy as np
-from EngineBits.player_controller import PlayerController
+from enginebits.player_controller import PlayerController
 
 
 class Player(Object):

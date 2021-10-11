@@ -20,8 +20,8 @@ else:
         import context
 
 
-from EngineBits.physics_model_generic import PhysicsController
-from EngineBits.models.collision import CollisionKeys
+from enginebits.physics_model_generic import PhysicsController
+from enginebits.models.collision import CollisionKeys
 from pygame.constants import QUIT
 from pygame import Surface
 from pygame.rect import Rect
