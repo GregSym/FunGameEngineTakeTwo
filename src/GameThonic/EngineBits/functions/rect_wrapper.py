@@ -1,10 +1,9 @@
 """ Storage for useful rect functions that aren't built into the class """
-import pygame
 from pygame.math import Vector2
 from pygame.rect import Rect
 
 
-def rect_corners(rect: pygame.Rect) -> list[Vector2]:
+def rect_corners(rect: Rect) -> list[Vector2]:
     return [
         Vector2(rect.topleft), Vector2(rect.topright),
         Vector2(rect.bottomleft), Vector2(rect.bottomright)]

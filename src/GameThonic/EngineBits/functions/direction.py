@@ -5,10 +5,7 @@ import numpy as np
 import pygame
 from pygame.math import Vector2
 from pygame.rect import Rect
-try:
-    from functions.rect_wrapper import rect_all_points, rect_corners
-except ModuleNotFoundError:
-    from GameThonic.EngineBits.functions.rect_wrapper import rect_all_points, rect_corners
+from gamethonic.EngineBits.functions.rect_wrapper import rect_all_points, rect_corners
 
 
 class BoundaryConditions(Enum):
@@ -121,7 +118,7 @@ class PhysxCalculations:
         return PhysxCalculations.boundary_calculation(angles=angles)
 
     @staticmethod
-    def collision(rect1: pygame.Rect, rect2: pygame.Rect) -> bool:
+    def collision(rect1: Rect, rect2: Rect) -> bool:
         if (rect2.bottom <= rect1.bottom < rect2.top) or (rect1.bottom <= rect2.bottom < rect1.top) or (
             (rect1.top <= rect2.top) and (rect2.top > rect1.bottom)) or (
                 (rect2.top <= rect1.top) and (rect1.top > rect2.bottom)) or (
