@@ -3,6 +3,7 @@ import pygame
 from pygame.math import Vector2
 from pygame.rect import Rect
 
+
 def rect_corners(rect: pygame.Rect) -> list[Vector2]:
     return [
         Vector2(rect.topleft), Vector2(rect.topright),

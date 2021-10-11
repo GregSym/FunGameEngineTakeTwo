@@ -44,7 +44,7 @@ class ObjectTemplate(ABC):
         """
             Getter for the item's surface
         """
-    
+
     @property
     @abstractmethod
     def model(self):

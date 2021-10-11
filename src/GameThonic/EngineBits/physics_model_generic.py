@@ -1,6 +1,6 @@
 
 from collections import deque
-from .models.collision import CollisionKeys, CollisionKeysDetailed, CollisionState
+from .models.collision import CollisionKeys, CollisionState
 from EngineBits.templates.object_template import ObjectTemplate
 import numpy as np
 from EngineBits.functions.direction import CollisionSide, PhysxCalculations
@@ -37,8 +37,8 @@ class PhysicsModelGeneric:
 
     @property
     def rect(self):
-        """ Rect created from the physics_model's version of the rect 
-        - can be defined seperately from the sprite 
+        """ Rect created from the physics_model's version of the rect
+        - can be defined seperately from the sprite
         """
         return pygame.Rect(
             self.position.x,
@@ -59,6 +59,13 @@ class PhysicsModelGeneric:
             predicted_position.y,
             self.dimensions.x,
             self.dimensions.y)
+
+    def projected_rect(self, dt: float) -> pygame.Rect:
+        """ A large projection encompassing both the starting and predicted rect """
+        return pygame.Rect(
+            self.position.x, self.position.y,
+            self.predicted_rect(dt=dt).right - self.position.x, self.predicted_rect(dt=dt).bottom - self.position.y
+        )
 
     def leading_edge(self, other_rect: pygame.Rect) -> Vector2:
         """ get the leading edges based on instantaneous velocity """
@@ -102,7 +109,7 @@ class CollisionHandler:
         return PhysxCalculations.get_collision(
             rect=self.model.rect, target_rects={
                 id: layer for (id, layer) in self.context.scene.items() if id == self.target
-            }.get(self.target).objects,
+            }[self.target].objects,
             collision_function=PhysxCalculations.collision_com
         )
 
@@ -190,10 +197,10 @@ class PhysicsController(controller_template.ControllerTemplate):
     def update(self):
         self.input()
         self.calculate_velocity()
-        self.get_collision(current_rect := self.physics_model.rect)
+        self.get_collision(self.physics_model.rect)
         self.handle_collision()
         self.get_collision(
-            rect=(predicted_rect := self.physics_model.predicted_rect(dt=self.context.dt)))
+            rect=self.physics_model.predicted_rect(dt=self.context.dt))
         self.calculate_position()
 
     def input(self):

@@ -7,17 +7,17 @@ class SceneTemplate(ABC):
         to large numbers of items in a scene, systematically
     """
 
-    def setup():
+    def setup(self):
         """
             Setup the objects in the scene
         """
 
-    def handle_collisions():
+    def handle_collisions(self):
         """
             Handles collisions between target objects and selected layers
         """
 
-    def camera_motion():
+    def camera_motion(self):
         """
             Handles the motion of the camera
         """

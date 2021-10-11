@@ -9,13 +9,10 @@ else:
         from .models.physics import WorldPhysics
         from . import scene
     except ImportError:
-        from events.action import Action # in the specific case where context is accessed relatively
+        from events.action import Action  # in the specific case where context is accessed relatively
         from models.physics import WorldPhysics
         import scene
 
-
-from typing import Any
-import pygame
 
 from pygame.time import Clock
 from pygame.surface import Surface

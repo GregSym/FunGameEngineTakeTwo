@@ -1,12 +1,9 @@
 # Import standard modules.
 from EngineBits.camera import Camera
-from EngineBits.templates.event_loop_item import EventLoopImplementation, EventLoopMultithreadedDraw
-from EngineBits.scene import Layer, Scene
-from EngineBits.events.action import Action
+from EngineBits.scene import Layer
 from EngineBits.settings.setup import pyGameSetup
 from EngineBits.player import Player
-from EngineBits.settings.settings import Settings
-from EngineBits.physics_model_generic import PhysicsModelGeneric, PlayerPhysics
+from EngineBits.physics_model_generic import PhysicsModelGeneric
 from EngineBits.floor import Floor
 from EngineBits.object import Object
 from EngineBits.context import Context, SurfaceInfo
@@ -15,11 +12,8 @@ from EngineBits.templates.main_template import AppTemplate
 # Import non-standard modules.
 import pygame
 from pygame import event
-from pygame.locals import *
 from pygame import mouse, QUIT
 from pygame import Vector2
-from datetime import timedelta
-from typing import Any
 import sys
 
 
@@ -33,7 +27,7 @@ class MainApp(AppTemplate):
         self.context: Context = Context(
             fps=fps, dt=dt, clock=clock, screen=screen, surface_info=SurfaceInfo(
                 width=640, height=480),
-            events=event.get(), actions=[], scene={})  
+            events=event.get(), actions=[], scene={})
 
     def loop_logic(self):
         # NOTE: .tick method returns milliseconds, hence /1000
@@ -42,7 +36,7 @@ class MainApp(AppTemplate):
 
     def run(self):
         self.setup()
-        print(f"fps is:", self.context.fps)
+        print("fps is:", self.context.fps)
         while True:
             self.update()
             self.draw()
@@ -70,13 +64,13 @@ class Engine(MainApp):
         Update game. Called once per frame.
         """
         # Go through events that are passed to the script by the window.
-        self.context.events = pygame.event.get()
-        for event in self.context.events:
-            if event.type == QUIT:
+        self.context.events = event.get()
+        for _event in self.context.events:
+            if _event.type == QUIT:
                 pygame.quit()  # Opposite of pygame.init
                 sys.exit()  # Not including this line crashes the script on Windows. Possibly
                 # on other operating systems too, but I don't know for sure. - note from template
-            if event.type == pygame.MOUSEBUTTONUP:
+            if _event.type == pygame.MOUSEBUTTONUP:
                 self.context.scene['player'].objects.append(Player(context=self.context, physics_model=PhysicsModelGeneric(
                     position=Vector2(mouse.get_pos()), velocity=Vector2(0, 0), has_gravity=True, acceleration=Vector2(0, 300), has_collision=True)))
 

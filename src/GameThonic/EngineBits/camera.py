@@ -1,4 +1,3 @@
-import pygame
 from pygame.math import Vector2
 from pygame.rect import Rect
 from EngineBits.scene import Layer
@@ -26,7 +25,7 @@ class Camera(EventLoopItem):
 
     def setup(self):
         # define buffer
-        self.buffer = pygame.Rect(
+        self.buffer = Rect(
             self.buffer_size,
             self.buffer_size,
             self.context.screen.get_size()[0] - self.buffer_size,

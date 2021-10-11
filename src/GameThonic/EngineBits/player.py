@@ -4,18 +4,16 @@
 if __name__ == "__main__":
     from object import Object
     from context import Context
-    from physics_model_generic import PhysicsModelGeneric, PlayerPhysics
+    from physics_model_generic import PhysicsModelGeneric
     from constants.colours import Colours
 else:
     from .object import Object
     from .context import Context
-    from .physics_model_generic import PhysicsModelGeneric, PlayerPhysics
+    from .physics_model_generic import PhysicsModelGeneric
     from .constants.colours import Colours
 
 import numpy as np
 from EngineBits.player_controller import PlayerController
-from pygame import Vector2, event
-import pygame
 
 
 class Player(Object):

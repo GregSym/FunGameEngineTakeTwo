@@ -1,6 +1,7 @@
 
 from dataclasses import dataclass
 
+
 @dataclass
 class Colours:
     red: tuple[int, int, int] = (255, 0, 0)

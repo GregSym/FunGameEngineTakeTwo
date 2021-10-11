@@ -5,7 +5,6 @@ if __name__ == "__main__":
     from functions.direction import PhysxCalculations
     import context
     from models.collision import CollisionEvent
-    import scene
 else:
     try:
         from .templates.object_template import ObjectTemplate
@@ -13,27 +12,22 @@ else:
         from .functions.direction import PhysxCalculations
         from .models.collision import CollisionEvent
         from . import context
-        from . import scene
     except ImportError:
         from templates.object_template import ObjectTemplate
         from physics_model_generic import PhysicsModelGeneric
         from functions.direction import PhysxCalculations
         from models.collision import CollisionEvent
         import context
-        import scene
 
 
-from dataclasses import dataclass
 from EngineBits.physics_model_generic import PhysicsController
 from EngineBits.models.collision import CollisionKeys
 from pygame.constants import QUIT
-from pygame.locals import Color
-from typing import Any, Tuple
-from pygame import Vector2, Surface, math, sprite
+from pygame import Surface
 from pygame.rect import Rect
+from pygame.math import Vector2
 import pygame
 import numpy as np
-from enum import Enum, auto
 
 
 class Object(ObjectTemplate):
@@ -101,7 +95,7 @@ class Object(ObjectTemplate):
     def update(self):
         self.controller.update()
         # self.get_collision()
-        # self.handle_collision() 
+        # self.handle_collision()
         # self.collision_interacting_event()
         # self.physics_model.gravity_update(dt=self.context.dt)
         self.rect.x, self.rect.y = self.physics_model.position
@@ -128,7 +122,8 @@ class Object(ObjectTemplate):
         return self.sprite
 
     def get_velocity(self) -> Vector2:
-        return self.physics_model.velocity
+        type_check_force_vel: Vector2 = self.physics_model.velocity
+        return type_check_force_vel
 
     @property
     def model(self) -> PhysicsModelGeneric:

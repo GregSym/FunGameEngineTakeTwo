@@ -1,4 +1,4 @@
-from pygame import Surface, Vector2
+from pygame import Surface
 from . import object
 from . import context
 from . import physics_model_generic

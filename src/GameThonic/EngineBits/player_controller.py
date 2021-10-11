@@ -1,28 +1,25 @@
 if __name__ == "__main__":
-    from templates.controller_template import ControllerTemplate
     from context import Context
     from physics_model_generic import PhysicsModelGeneric
 else:
-    from .templates.controller_template import ControllerTemplate
     from .context import Context
     from EngineBits.physics_model_generic import PhysicsModelGeneric
 
 from dataclasses import dataclass
 from datetime import timedelta
-from EngineBits.physics_model_generic import PhysicsController, PlayerPhysics
+from EngineBits.physics_model_generic import PlayerPhysics
 from EngineBits.events.action import Action
 
-from pygame import Vector2, event
+from pygame import event
 import pygame
-from concurrent.futures import ThreadPoolExecutor
-from typing import Callable
+from typing import Any, Callable
 
 
 @dataclass
 class KeyAction:
-    key_down: Callable
+    key_down: Callable[..., Any]
     """ method to call while key is held """
-    key_up: Callable
+    key_up: Callable[..., Any]
     """ method to call upon key release """
 
 
@@ -157,8 +154,8 @@ class PlayerController(PlayerPhysics):
         self.get_events()
 
     def get_events(self):
-        for event in self.context.events:
-            self.handle_event(event)
+        for _event in self.context.events:
+            self.handle_event(_event)
 
     def handle_event(self, event: event.Event):
         if event.type == pygame.KEYDOWN:

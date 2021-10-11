@@ -22,6 +22,7 @@ class CollisionKeysDetailed(enum.Enum):
     LEFT = enum.auto()
     RIGHT = enum.auto()
 
+
 class CollisionState(enum.Enum):
     MOMENTUM = enum.auto()
     """ Normal simplified Newtonian behaviour """

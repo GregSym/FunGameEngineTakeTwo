@@ -61,6 +61,7 @@ def index_to_side(index: int) -> CollisionSide:
         return CollisionSide.RIGHT
     if index == 3:
         return CollisionSide.LEFT
+    return CollisionSide.UNDEFINED
 
 
 class PhysxCalculations:
@@ -108,26 +109,30 @@ class PhysxCalculations:
             return CollisionSide.UNDEFINED
 
     @staticmethod
-    def relative_position(rect1: pygame.Rect, rect2: pygame.Rect) -> CollisionSide:
+    def relative_position(rect1: Rect, rect2: Rect) -> CollisionSide:
         """ determine relative position using triangulation between rect corners """
-        x_axis = Vector2(1, 0)
+        # x_axis = Vector2(1, 0)
         ref_vector = Vector2(rect1.x, rect1.y)
         triangulation_vectors: list[Vector2] = []
         for corner_vector in rect_corners(rect=rect2):
             triangulation_vectors.append(corner_vector - ref_vector)
-        angle_vector = Vector2(rect2.x - rect1.x, rect2.y - rect1.y)
+        # angle_vector = Vector2(rect2.x - rect1.x, rect2.y - rect1.y)
         angles = FourAngles.from_list(vectors=triangulation_vectors)
         return PhysxCalculations.boundary_calculation(angles=angles)
 
     @staticmethod
     def collision(rect1: pygame.Rect, rect2: pygame.Rect) -> bool:
-        if (rect2.bottom <= rect1.bottom < rect2.top) or (rect1.bottom <= rect2.bottom < rect1.top) or ((rect1.top <= rect2.top) and (rect2.top > rect1.bottom)) or ((rect2.top <= rect1.top) and (rect1.top > rect2.bottom)) or ((rect1.top < rect2.top) and (rect2.bottom <= rect1.top)) or ((rect1.bottom <= rect2.top) and (rect1.bottom > rect2.bottom)):
+        if (rect2.bottom <= rect1.bottom < rect2.top) or (rect1.bottom <= rect2.bottom < rect1.top) or (
+            (rect1.top <= rect2.top) and (rect2.top > rect1.bottom)) or (
+                (rect2.top <= rect1.top) and (rect1.top > rect2.bottom)) or (
+                    (rect1.top < rect2.top) and (rect2.bottom <= rect1.top)) or (
+                        (rect1.bottom <= rect2.top) and (rect1.bottom > rect2.bottom)):
             if (rect2.left <= rect1.right < rect2.right) or (rect1.left <= rect2.right < rect1.right):
                 return True
         return False
 
     @staticmethod
-    def collision_com(rect1: pygame.Rect, rect2: pygame.Rect) -> CollisionSide:
+    def collision_com(rect1: Rect, rect2: Rect) -> CollisionSide:
         """ Determine relative position using relative position of the center of mass of rect1
             - relative position to rect1, eg. rect1 left of rect2 -> CollisionSide.RIGHT
         """
@@ -166,6 +171,7 @@ class PhysxCalculations:
             for index, side in enumerate(relative_sides):
                 if side == min(relative_sides):
                     return index_to_side(index=index)
+            return CollisionSide.UNDEFINED
 
         # alt backup determination
         side_distances = [relative_vector for relative_vector in [rect2.top - rect2.centery,
@@ -183,7 +189,7 @@ class PhysxCalculations:
     @staticmethod
     def collision_full_frame(rect1: Rect, rect2: Rect) -> CollisionSide:
         """ relativity using all available points """
-        store_all_points_rect1 = rect_all_points(rect1)
+        # store_all_points_rect1 = rect_all_points(rect1)
         store_all_points = rect_all_points(rect2)  # only run this once
         right_positioned = [point for point in store_all_points if point.x >= rect1.centerx]
         bottom_positioned = [point for point in store_all_points if point.y >= rect1.centery]
@@ -201,6 +207,8 @@ class PhysxCalculations:
             if mass_total == max(mass_totals):
                 return index_to_side(index)
 
+        return CollisionSide.UNDEFINED
+
     @staticmethod
     def collision_full_frame_alt(rect1: Rect, rect2: Rect) -> CollisionSide:
         """ relativity using all available points *alt """
@@ -217,6 +225,8 @@ class PhysxCalculations:
         for index, mass_total in enumerate(mass_totals):
             if mass_total == max(mass_totals):
                 return index_to_side(index)
+
+        return CollisionSide.UNDEFINED
 
     @staticmethod
     def get_collision(rect: Rect,

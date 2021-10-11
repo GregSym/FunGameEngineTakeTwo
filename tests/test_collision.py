@@ -41,7 +41,7 @@ def test_collision_direction():
 
 @pytest.mark.parametrize(["rect", "side"], rect_side_list_generator(limit=100))
 def test_collision_direction_general(rect: Rect, side: CollisionSide):
-    """ More intensive testing, making some rect package assumptions 
+    """ More intensive testing, making some rect package assumptions
         - still quite a general test - allows horizontal / vertical collision confusion edge cases
     """
     topleft = Vector2(rect.x, rect.y)
@@ -53,7 +53,7 @@ def test_collision_direction_general(rect: Rect, side: CollisionSide):
         detected = PhysxCalculations.collision_com(rect1=test_rect, rect2=rect)
         assert detected == side if not (
             side == CollisionSide.LEFT or side == CollisionSide.RIGHT and detected == CollisionSide.TOP or detected == CollisionSide.BOTTOM
-            ) else True
+        ) else True
 
     if side == CollisionSide.BOTTOM:
         topleft.y -= random.randint(int(height / 2 if height <= rect.height else height - 1), height)
