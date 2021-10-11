@@ -1,13 +1,25 @@
 # Import standard modules.
-from enginebits.camera import Camera
-from enginebits.scene import Layer
-from enginebits.settings.setup import pyGameSetup
-from enginebits.player import Player
-from enginebits.physics_model_generic import PhysicsModelGeneric
-from enginebits.floor import Floor
-from enginebits.object import Object
-from enginebits.context import Context, SurfaceInfo
-from enginebits.templates.main_template import AppTemplate
+try:
+    from enginebits.camera import Camera
+    from enginebits.scene import Layer
+    from enginebits.settings.setup import pyGameSetup
+    from enginebits.player import Player
+    from enginebits.physics_model_generic import PhysicsModelGeneric
+    from enginebits.floor import Floor
+    from enginebits.object import Object
+    from enginebits.context import Context, SurfaceInfo
+    from enginebits.templates.main_template import AppTemplate
+except ModuleNotFoundError:
+    from gamethonic.enginebits.camera import Camera
+    from gamethonic.enginebits.scene import Layer
+    from gamethonic.enginebits.settings.setup import pyGameSetup
+    from gamethonic.enginebits.player import Player
+    from gamethonic.enginebits.physics_model_generic import PhysicsModelGeneric
+    from gamethonic.enginebits.floor import Floor
+    from gamethonic.enginebits.object import Object
+    from gamethonic.enginebits.context import Context, SurfaceInfo
+    from gamethonic.enginebits.templates.main_template import AppTemplate
+
 
 # Import non-standard modules.
 import pygame
@@ -20,7 +32,6 @@ import sys
 class MainApp(AppTemplate):
     def __init__(self) -> None:
         super().__init__()
-        self.run()
 
     def setup(self):
         dt, fps, clock, screen = pyGameSetup()
@@ -28,8 +39,14 @@ class MainApp(AppTemplate):
             fps=fps, dt=dt, clock=clock, screen=screen, surface_info=SurfaceInfo(
                 width=640, height=480),
             events=event.get(), actions=[], scene={})
+    
+    def start(self):
+        """ triggers the run method """
+        self.run()
 
     def loop_logic(self):
+        self.update()
+        self.draw()
         # NOTE: .tick method returns milliseconds, hence /1000
         self.context.dt = self.context.clock.tick(self.context.fps) / 1000
         print(self.context.dt)
@@ -98,8 +115,9 @@ class Engine(MainApp):
 
 def main():
     """ Main functionality of the app """
-    Engine()  # init and run engine - engine is currently run from the constructor/init method
+    engine = Engine()  # init and run engine - engine is currently run from the constructor/init method
     # those aren't the same thing but, like, whatevs
+    engine.run()
 
 
 if __name__ == "__main__":

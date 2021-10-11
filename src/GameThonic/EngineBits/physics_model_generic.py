@@ -1,11 +1,12 @@
+""" physics model and controller schemes for GameObjects to depend on """
 
 from collections import deque
 from .models.collision import CollisionKeys, CollisionState
 from enginebits.templates.object_template import ObjectTemplate
 import numpy as np
-from gamethonic.functions.direction import CollisionSide, PhysxCalculations
 import pygame
 from enginebits.context import Context
+
 if __name__ == "__main__":
     from templates import controller_template
 else:
@@ -14,7 +15,7 @@ else:
     except ImportError:
         from templates import controller_template
 
-
+from gamethonic.enginebits import direction
 from dataclasses import asdict, dataclass
 from pygame.math import Vector2
 
@@ -106,11 +107,11 @@ class CollisionHandler:
         self.context = context
 
     def get_collision(self):
-        return PhysxCalculations.get_collision(
+        return direction.PhysxCalculations.get_collision(
             rect=self.model.rect, target_rects={
                 id: layer for (id, layer) in self.context.scene.items() if id == self.target
             }[self.target].objects,
-            collision_function=PhysxCalculations.collision_com
+            collision_function=direction.PhysxCalculations.collision_com
         )
 
 
@@ -120,7 +121,7 @@ class PhysicsController(controller_template.ControllerTemplate):
     collision_target = 'env'
     collision: dict[CollisionKeys, ObjectTemplate] = {}
     collision_state = CollisionState.MOMENTUM
-    collisions = deque[dict[CollisionSide, ObjectTemplate]]
+    collisions = deque[dict[direction.CollisionSide, ObjectTemplate]]
 
     def __init__(self, context: Context, physics_model: PhysicsModelGeneric = PhysicsModelGeneric()) -> None:
         self.context = context
@@ -133,7 +134,7 @@ class PhysicsController(controller_template.ControllerTemplate):
                 object for object in collision_layer.objects if rect.colliderect(
                     object.get_rect().x, object.get_rect().y - 3, object.get_rect().right, object.get_rect().bottom)]
             for object in collision_objects:
-                angle = PhysxCalculations.determineSide(
+                angle = direction.PhysxCalculations.determineSide(
                     rect, object.get_rect())
                 self.angle = angle
                 if angle == np.pi / 2 or angle == 3 * np.pi / 2:

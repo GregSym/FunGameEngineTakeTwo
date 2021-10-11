@@ -11,12 +11,19 @@ else:
         from .models.collision import CollisionEvent
         from . import context
     except ImportError:
-        from templates.object_template import ObjectTemplate
-        from physics_model_generic import PhysicsModelGeneric, PhysicsController
-        from models.collision import CollisionEvent
-        import context
+        try:
+            from templates.object_template import ObjectTemplate
+            from physics_model_generic import PhysicsModelGeneric, PhysicsController
+            from models.collision import CollisionEvent
+            import context
+        except ModuleNotFoundError:
+            from gamethonic.enginebits.templates.object_template import ObjectTemplate
+            from gamethonic.enginebits.physics_model_generic import PhysicsModelGeneric, PhysicsController
+            from gamethonic.enginebits.models.collision import CollisionEvent
+            from gamethonic.enginebits import context
 
-from gamethonic.functions.direction import PhysxCalculations
+
+from .functions.direction import PhysxCalculations
 from enginebits.models.collision import CollisionKeys
 from pygame.constants import QUIT
 from pygame import Surface

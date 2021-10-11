@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 import pygame
+from pygame.rect import Rect
 from pygame.math import Vector2
 
 
@@ -34,7 +35,7 @@ class ObjectTemplate(ABC):
         """
 
     @abstractmethod
-    def get_rect(self) -> pygame.Rect:
+    def get_rect(self) -> Rect:
         """
             Getter for the item's rect
         """

@@ -8,6 +8,10 @@ else:
     except ImportError:
         from templates.scene_template import SceneTemplate
         from templates.object_template import ObjectTemplate
+    except ModuleNotFoundError:
+        from gamethonic.enginebits.templates.scene_template import SceneTemplate
+        from gamethonic.enginebits.templates.object_template import ObjectTemplate
+
 
 
 from dataclasses import dataclass, field

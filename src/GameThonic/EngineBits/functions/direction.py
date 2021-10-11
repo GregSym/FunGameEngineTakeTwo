@@ -5,7 +5,7 @@ import numpy as np
 import pygame
 from pygame.math import Vector2
 from pygame.rect import Rect
-from gamethonic.functions.rect_wrapper import rect_all_points, rect_corners
+from .rect_wrapper import rect_all_points, rect_corners
 
 
 class BoundaryConditions(Enum):
@@ -67,7 +67,7 @@ class PhysxCalculations:
     """
 
     @staticmethod
-    def determineSide(rect1: pygame.Rect, rect2: pygame.Rect) -> float:
+    def determineSide(rect1: Rect, rect2: Rect) -> float:
         """
             uses rects to determine the direction (rad) of collision of rect1 and rect2, relative to rect2
             - courtesy of adammoyle @ https://stackoverflow.com/questions/44119680/pygame-detect-collision-direction

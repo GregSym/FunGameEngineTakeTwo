@@ -3,8 +3,7 @@ import random
 from pygame.math import Vector2
 import pytest
 from pygame.rect import Rect
-from gamethonic.functions import direction
-from gamethonic.functions import random_item_generation
+from gamethonic.enginebits import direction, random_item_generation
 
 rect_side_list = [
     (Rect(0, 0, 4, 8), direction.CollisionSide.TOP),
