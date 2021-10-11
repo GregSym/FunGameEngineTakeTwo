@@ -1,26 +1,22 @@
 
 if __name__ == "__main__":
     from templates.object_template import ObjectTemplate
-    from physics_model_generic import PhysicsModelGeneric
-    from functions.direction import PhysxCalculations
+    from physics_model_generic import PhysicsModelGeneric, PhysicsController
     import context
     from models.collision import CollisionEvent
 else:
     try:
         from .templates.object_template import ObjectTemplate
-        from .physics_model_generic import PhysicsModelGeneric
-        from .functions.direction import PhysxCalculations
+        from .physics_model_generic import PhysicsModelGeneric, PhysicsController
         from .models.collision import CollisionEvent
         from . import context
     except ImportError:
         from templates.object_template import ObjectTemplate
-        from physics_model_generic import PhysicsModelGeneric
-        from functions.direction import PhysxCalculations
+        from physics_model_generic import PhysicsModelGeneric, PhysicsController
         from models.collision import CollisionEvent
         import context
 
-
-from enginebits.physics_model_generic import PhysicsController
+from gamethonic.functions.direction import PhysxCalculations
 from enginebits.models.collision import CollisionKeys
 from pygame.constants import QUIT
 from pygame import Surface

@@ -1,13 +1,13 @@
 # Import standard modules.
-from EngineBits.camera import Camera
-from EngineBits.scene import Layer
-from EngineBits.settings.setup import pyGameSetup
-from EngineBits.player import Player
-from EngineBits.physics_model_generic import PhysicsModelGeneric
-from EngineBits.floor import Floor
-from EngineBits.object import Object
-from EngineBits.context import Context, SurfaceInfo
-from EngineBits.templates.main_template import AppTemplate
+from enginebits.camera import Camera
+from enginebits.scene import Layer
+from enginebits.settings.setup import pyGameSetup
+from enginebits.player import Player
+from enginebits.physics_model_generic import PhysicsModelGeneric
+from enginebits.floor import Floor
+from enginebits.object import Object
+from enginebits.context import Context, SurfaceInfo
+from enginebits.templates.main_template import AppTemplate
 
 # Import non-standard modules.
 import pygame

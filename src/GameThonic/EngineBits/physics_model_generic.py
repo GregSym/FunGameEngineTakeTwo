@@ -3,7 +3,7 @@ from collections import deque
 from .models.collision import CollisionKeys, CollisionState
 from enginebits.templates.object_template import ObjectTemplate
 import numpy as np
-from enginebits.functions.direction import CollisionSide, PhysxCalculations
+from gamethonic.functions.direction import CollisionSide, PhysxCalculations
 import pygame
 from enginebits.context import Context
 if __name__ == "__main__":
