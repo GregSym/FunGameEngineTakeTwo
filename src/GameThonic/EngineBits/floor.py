@@ -1,7 +1,12 @@
 from pygame import Surface
-from . import object
-from . import context
-from . import physics_model_generic
+try:
+    from . import object
+    from . import context
+    from . import physics_model_generic
+except ModuleNotFoundError:
+    from gamethonic.enginebits import object
+    from gamethonic.enginebits import context
+    from gamethonic.enginebits import physics_model_generic
 
 
 class Floor(object.Object):

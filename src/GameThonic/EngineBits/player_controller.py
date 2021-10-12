@@ -1,14 +1,10 @@
-if __name__ == "__main__":
-    from context import Context
-    from physics_model_generic import PhysicsModelGeneric
-else:
-    from .context import Context
-    from enginebits.physics_model_generic import PhysicsModelGeneric
+from gamethonic.enginebits.context import Context
+from gamethonic.enginebits.physics_model_generic import PhysicsModelGeneric
 
 from dataclasses import dataclass
 from datetime import timedelta
-from enginebits.physics_model_generic import PlayerPhysics
-from enginebits.events.action import Action
+from gamethonic.enginebits.physics_model_generic import PlayerPhysics
+from gamethonic.enginebits.events.action import Action
 
 from pygame import event
 import pygame

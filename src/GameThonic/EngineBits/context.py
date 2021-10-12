@@ -9,10 +9,14 @@ else:
         from .models.physics import WorldPhysics
         from . import scene
     except ImportError:
-        from events.action import Action  # in the specific case where context is accessed relatively
-        from models.physics import WorldPhysics
-        import scene
-
+        try:
+            from events.action import Action  # in the specific case where context is accessed relatively
+            from models.physics import WorldPhysics
+            import scene
+        except ModuleNotFoundError:
+            from gamethonic.enginebits.events.action import Action  # in the specific case where context is accessed relatively
+            from gamethonic.enginebits.models.physics import WorldPhysics
+            from gamethonic.enginebits import scene
 
 from pygame.time import Clock
 from pygame.surface import Surface

@@ -6,14 +6,37 @@ if __name__ == "__main__":
     from context import Context
     from physics_model_generic import PhysicsModelGeneric
     from constants.colours import Colours
+    from player_controller import PlayerController
 else:
-    from .object import Object
-    from .context import Context
-    from .physics_model_generic import PhysicsModelGeneric
-    from .constants.colours import Colours
+    try:
+        from .object import Object
+        from .context import Context
+        from .physics_model_generic import PhysicsModelGeneric
+        from .constants.colours import Colours
+        from .player_controller import PlayerController
+    except ImportError:
+        try:
+            from enginebits.object import Object
+            from enginebits.context import Context
+            from enginebits.physics_model_generic import PhysicsModelGeneric
+            from enginebits.constants.colours import Colours
+            from enginebits.player_controller import PlayerController
+        except ModuleNotFoundError:
+            from gamethonic.enginebits.object import Object
+            from gamethonic.enginebits.context import Context
+            from gamethonic.enginebits.physics_model_generic import PhysicsModelGeneric
+            from gamethonic.enginebits.constants.colours import Colours
+            from gamethonic.enginebits.player_controller import PlayerController
+    except ModuleNotFoundError:
+        from gamethonic.enginebits.object import Object
+        from gamethonic.enginebits.context import Context
+        from gamethonic.enginebits.physics_model_generic import PhysicsModelGeneric
+        from gamethonic.enginebits.constants.colours import Colours
+        from gamethonic.enginebits.player_controller import PlayerController
+
 
 import numpy as np
-from enginebits.player_controller import PlayerController
+
 
 
 class Player(Object):

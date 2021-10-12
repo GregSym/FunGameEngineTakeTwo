@@ -1,11 +1,17 @@
 """ physics model and controller schemes for GameObjects to depend on """
 
 from collections import deque
-from .models.collision import CollisionKeys, CollisionState
-from enginebits.templates.object_template import ObjectTemplate
 import numpy as np
 import pygame
-from enginebits.context import Context
+try:
+    from .models.collision import CollisionKeys, CollisionState
+    from enginebits.templates.object_template import ObjectTemplate
+    from enginebits.context import Context
+except ModuleNotFoundError:
+    from gamethonic.enginebits.models.collision import CollisionKeys, CollisionState
+    from gamethonic.enginebits.templates.object_template import ObjectTemplate
+    from gamethonic.enginebits.context import Context
+
 
 if __name__ == "__main__":
     from templates import controller_template
@@ -13,9 +19,12 @@ else:
     try:
         from .templates import controller_template
     except ImportError:
-        from templates import controller_template
+        try:
+            from templates import controller_template
+        except ModuleNotFoundError:
+            from gamethonic.enginebits.templates import controller_template
 
-from gamethonic.enginebits import direction
+from gamethonic.enginebits.functions import direction
 from dataclasses import asdict, dataclass
 from pygame.math import Vector2
 

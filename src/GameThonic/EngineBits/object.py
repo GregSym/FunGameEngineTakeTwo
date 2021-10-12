@@ -22,9 +22,13 @@ else:
             from gamethonic.enginebits.models.collision import CollisionEvent
             from gamethonic.enginebits import context
 
+try:
+    from .functions.direction import PhysxCalculations
+    from enginebits.models.collision import CollisionKeys
+except ModuleNotFoundError:
+    from gamethonic.enginebits.functions.direction import PhysxCalculations
+    from gamethonic.enginebits.models.collision import CollisionKeys
 
-from .functions.direction import PhysxCalculations
-from enginebits.models.collision import CollisionKeys
 from pygame.constants import QUIT
 from pygame import Surface
 from pygame.rect import Rect

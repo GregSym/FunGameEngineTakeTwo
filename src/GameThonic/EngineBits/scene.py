@@ -1,21 +1,22 @@
 if __name__ == "__main__":
-    from templates.scene_template import SceneTemplate
-    from templates.object_template import ObjectTemplate
+    from templates import SceneTemplate
+    from templates import ObjectTemplate
 else:
     try:
-        from .templates.scene_template import SceneTemplate
-        from .templates.object_template import ObjectTemplate
+        from .templates import SceneTemplate
+        from .templates import ObjectTemplate
     except ImportError:
-        from templates.scene_template import SceneTemplate
-        from templates.object_template import ObjectTemplate
+        try:
+            from templates import SceneTemplate
+            from templates import ObjectTemplate
+        except ModuleNotFoundError:
+            from gamethonic.enginebits.templates import SceneTemplate
+            from gamethonic.enginebits.templates import ObjectTemplate
     except ModuleNotFoundError:
-        from gamethonic.enginebits.templates.scene_template import SceneTemplate
-        from gamethonic.enginebits.templates.object_template import ObjectTemplate
-
-
+        from gamethonic.enginebits.templates import SceneTemplate
+        from gamethonic.enginebits.templates import ObjectTemplate
 
 from dataclasses import dataclass, field
-
 import pygame
 
 

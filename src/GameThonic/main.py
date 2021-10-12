@@ -1,25 +1,13 @@
-# Import standard modules.
-try:
-    from enginebits.camera import Camera
-    from enginebits.scene import Layer
-    from enginebits.settings.setup import pyGameSetup
-    from enginebits.player import Player
-    from enginebits.physics_model_generic import PhysicsModelGeneric
-    from enginebits.floor import Floor
-    from enginebits.object import Object
-    from enginebits.context import Context, SurfaceInfo
-    from enginebits.templates.main_template import AppTemplate
-except ModuleNotFoundError:
-    from gamethonic.enginebits.camera import Camera
-    from gamethonic.enginebits.scene import Layer
-    from gamethonic.enginebits.settings.setup import pyGameSetup
-    from gamethonic.enginebits.player import Player
-    from gamethonic.enginebits.physics_model_generic import PhysicsModelGeneric
-    from gamethonic.enginebits.floor import Floor
-    from gamethonic.enginebits.object import Object
-    from gamethonic.enginebits.context import Context, SurfaceInfo
-    from gamethonic.enginebits.templates.main_template import AppTemplate
-
+# local imports
+from gamethonic.enginebits import Camera
+from gamethonic.enginebits import Layer
+from gamethonic.enginebits import pyGameSetup
+from gamethonic.enginebits import Player
+from gamethonic.enginebits import PhysicsModelGeneric
+from gamethonic.enginebits import Floor
+from gamethonic.enginebits import Object
+from gamethonic.enginebits import Context, SurfaceInfo
+from gamethonic.enginebits import AppTemplate
 
 # Import non-standard modules.
 import pygame
@@ -39,7 +27,7 @@ class MainApp(AppTemplate):
             fps=fps, dt=dt, clock=clock, screen=screen, surface_info=SurfaceInfo(
                 width=640, height=480),
             events=event.get(), actions=[], scene={})
-    
+
     def start(self):
         """ triggers the run method """
         self.run()
