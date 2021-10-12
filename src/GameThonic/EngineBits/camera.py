@@ -1,8 +1,8 @@
 from pygame.math import Vector2
 from pygame.rect import Rect
-from gamethonic.enginebits.scene import Layer
+from gamethonic.enginebits import Layer
 from gamethonic.enginebits.templates import EventLoopItem
-from gamethonic.enginebits.context import Context
+from gamethonic.enginebits import Context
 
 
 class Camera(EventLoopItem):
