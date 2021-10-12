@@ -38,7 +38,6 @@ else:
 import numpy as np
 
 
-
 class Player(Object):
     def __init__(self,
                  context: Context,

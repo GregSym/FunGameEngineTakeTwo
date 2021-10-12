@@ -19,3 +19,8 @@ except ModuleNotFoundError:
     from gamethonic.enginebits.object import Object
     from gamethonic.enginebits.context import Context, SurfaceInfo
     from gamethonic.enginebits.templates.main_template import AppTemplate
+
+
+__all__ = ['Camera', 'Layer', 'pyGameSetup', 'Player',
+           'PhysicsModelGeneric', 'Floor', 'Object', 'Context', 'SurfaceInfo',
+           'AppTemplate']
