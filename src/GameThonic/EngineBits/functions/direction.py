@@ -1,4 +1,4 @@
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Protocol
 import numpy as np
@@ -93,7 +93,6 @@ class PhysxCalculations:
 
     @staticmethod
     def boundary_calculation(angles: FourAngles) -> CollisionSide:
-        print([angle / np.pi for angle in asdict(angles).values()])
         if angles.top_left < BoundaryConditions.FORTYFIVE.value and angles.bottom_left > 0:
             return CollisionSide.RIGHT
         if angles.top_left >= BoundaryConditions.FORTYFIVE.value and angles.top_right < BoundaryConditions.NINETY.value:

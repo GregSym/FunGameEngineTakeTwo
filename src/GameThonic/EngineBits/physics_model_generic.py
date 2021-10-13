@@ -198,7 +198,6 @@ class PhysicsController(controller_template.ControllerTemplate):
         #                 CollisionKeys.HORIZONTAL).get_rect().right
 
         if 'nullhack' in adjusted_velocity:
-            print(f'pos: {self.physics_model.position} | {adjusted_velocity}')
             self.physics_model.position += adjusted_velocity.pop(
                 'nullhack')
         else:
