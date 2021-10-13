@@ -6,6 +6,7 @@ import pygame
 from pygame.math import Vector2
 from pygame.rect import Rect
 from .rect_wrapper import rect_all_points, rect_corners
+from gamethonic.enginebits.templates import ObjectTemplate
 
 
 class BoundaryConditions(Enum):
@@ -47,6 +48,12 @@ class CollisionSide(Enum):
 class _CollisionFunctionType(Protocol):
     def __call__(self, rect1: Rect, rect2: Rect) -> CollisionSide:
         """ A function type that takes in two rects and returns a collision direction """
+
+
+@dataclass
+class CollisionWrapper:
+    side: CollisionSide
+    item: ObjectTemplate
 
 
 def index_to_side(index: int) -> CollisionSide:
@@ -226,16 +233,18 @@ class PhysxCalculations:
 
     @staticmethod
     def get_collision(rect: Rect,
-                      target_rects: list[Rect],
-                      collision_function: _CollisionFunctionType) -> dict[CollisionSide, CollisionSide]:
+                      target_rects: list[ObjectTemplate],
+                      collision_function: _CollisionFunctionType) -> dict[CollisionSide, ObjectTemplate]:
         """ Creates a full 2D collision event for a given rect and target group of rects """
-        collision_event: dict[CollisionSide, CollisionSide] = {}
-        collision_side: list[CollisionSide] = [
-            collision_function(rect1=rect, rect2=_rect) for _rect in target_rects if rect.colliderect(_rect)]
+        collision_event: dict[CollisionSide, ObjectTemplate] = {}
+        collision_side: list[CollisionWrapper] = [
+            CollisionWrapper(
+                side=collision_function(rect1=rect, rect2=_rect.get_rect()), item=_rect
+            ) for _rect in target_rects if rect.colliderect(_rect.get_rect())]
         for side in collision_side:
-            if side not in collision_event:
-                collision_event[side] = side
-            if len([collision_event.keys()]) == 4:
+            if side.side not in collision_event:
+                collision_event[side.side] = side.item
+            if len([key for key in collision_event.keys()]) == 4:
                 return collision_event
         return collision_event
 
