@@ -29,7 +29,7 @@ else:
             from gamethonic.enginebits.templates import controller_template
 
 from gamethonic.enginebits.functions import direction
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from pygame.math import Vector2
 
 
@@ -125,9 +125,9 @@ class CollisionInteraction:
 
 class CollisionHandler(HandlerTemplate):
     def __init__(self,
-                 model: PhysicsModelGeneric, 
-                 target: str, 
-                 context: Context, 
+                 model: PhysicsModelGeneric,
+                 target: str,
+                 context: Context,
                  on_collision: CollisionInteraction = CollisionInteraction()) -> None:
         self.model = model
         self.on_collision = on_collision
@@ -171,7 +171,7 @@ class CollisionHandler(HandlerTemplate):
                 handle_null(function=self.on_collision.on_left_collision)
             elif direction.CollisionSide.RIGHT in collisions:
                 handle_null(function=self.on_collision.on_right_collision)
-    
+
     def handle_predicted_collision(self):
         """ handler for when predicted collisions are detected, based on the physics of the item """
         if direction.CollisionSide.BOTTOM in (predicted_collision := self.get_predicted_collision()):
@@ -201,11 +201,9 @@ class PhysicsHandler(HandlerTemplate):
         self.model = model
         self.context = context
 
-
     def apply_physics(self):
         self.model.velocity += self.model.acceleration * self.context.dt
         self.model.position += self.model.velocity * self.context.dt
-
 
     def update(self):
         self.apply_physics()
