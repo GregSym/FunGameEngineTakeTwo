@@ -1,15 +1,19 @@
 """ physics model and controller schemes for GameObjects to depend on """
 
 from collections import deque
+from typing import Any, Callable, Optional
 import numpy as np
 import pygame
+from pygame.rect import Rect
 try:
     from .models.collision import CollisionKeys, CollisionState
     from enginebits.templates.object_template import ObjectTemplate
+    from enginebits.templates import HandlerTemplate
     from enginebits.context import Context
 except ModuleNotFoundError:
     from gamethonic.enginebits.models.collision import CollisionKeys, CollisionState
     from gamethonic.enginebits.templates.object_template import ObjectTemplate
+    from gamethonic.enginebits.templates import HandlerTemplate
     from gamethonic.enginebits.context import Context
 
 
@@ -25,7 +29,7 @@ else:
             from gamethonic.enginebits.templates import controller_template
 
 from gamethonic.enginebits.functions import direction
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pygame.math import Vector2
 
 
@@ -109,19 +113,102 @@ class PhysicsModelGeneric:
         pass
 
 
-class CollisionHandler:
-    def __init__(self, model: PhysicsModelGeneric, target: str, context: Context) -> None:
+@dataclass
+class CollisionInteraction:
+    on_vertical_collision: Optional[Callable[..., Any]] = None
+    on_horizontal_collision: Optional[Callable[..., Any]] = None
+    on_bottom_collision: Optional[Callable[..., Any]] = None
+    on_top_collision: Optional[Callable[..., Any]] = None
+    on_right_collision: Optional[Callable[..., Any]] = None
+    on_left_collision: Optional[Callable[..., Any]] = None
+
+
+class CollisionHandler(HandlerTemplate):
+    def __init__(self,
+                 model: PhysicsModelGeneric, 
+                 target: str, 
+                 context: Context, 
+                 on_collision: CollisionInteraction = CollisionInteraction()) -> None:
         self.model = model
+        self.on_collision = on_collision
         self.target = target
         self.context = context
 
-    def get_collision(self):
+    def get_collision(self, rect: Rect):
         return direction.PhysxCalculations.get_collision(
-            rect=self.model.rect, target_rects={
+            rect=rect, target_rects={
                 id: layer for (id, layer) in self.context.scene.items() if id == self.target
             }[self.target].objects,
             collision_function=direction.PhysxCalculations.collision_com
         )
+
+    def get_current_collision(self):
+        return self.get_collision(rect=self.model.rect)
+
+    def get_predicted_collision(self):
+        return self.get_collision(rect=self.model.predicted_rect(dt=self.context.dt))
+
+    def get_projected_collision(self):
+        return self.get_collision(rect=self.model.projected_rect(dt=self.context.dt))
+
+    def handle_collision(self):
+        """ handler for when a collision is currently being detected """
+        def handle_null(function: Optional[Callable[..., Any]]):
+            """ private: checks for null function names in CollisionInteraction struct """
+            if function is None:
+                return False
+            function()
+            return True
+        if (direction.CollisionSide.BOTTOM or direction.CollisionSide.TOP) in (collisions := self.get_current_collision()).keys():
+            handle_null(function=self.on_collision.on_vertical_collision)
+            if direction.CollisionSide.BOTTOM in collisions:
+                handle_null(function=self.on_collision.on_bottom_collision)
+            elif direction.CollisionSide.TOP in collisions:
+                handle_null(function=self.on_collision.on_top_collision)
+        if (direction.CollisionSide.LEFT or direction.CollisionSide.RIGHT) in collisions.keys():
+            handle_null(function=self.on_collision.on_horizontal_collision)
+            if direction.CollisionSide.LEFT in collisions:
+                handle_null(function=self.on_collision.on_left_collision)
+            elif direction.CollisionSide.RIGHT in collisions:
+                handle_null(function=self.on_collision.on_right_collision)
+    
+    def handle_predicted_collision(self):
+        """ handler for when predicted collisions are detected, based on the physics of the item """
+        if direction.CollisionSide.BOTTOM in (predicted_collision := self.get_predicted_collision()):
+            difference = self.model.rect.bottom - predicted_collision[direction.CollisionSide.BOTTOM].get_rect().top
+            self.model.position.y += difference
+        elif direction.CollisionSide.TOP in predicted_collision:
+            difference = self.model.rect.top - predicted_collision[direction.CollisionSide.BOTTOM].get_rect().bottom
+            self.model.position.y += difference
+        elif direction.CollisionSide.LEFT in predicted_collision:
+            difference = self.model.rect.left - predicted_collision[direction.CollisionSide.BOTTOM].get_rect().right
+            self.model.position.x += difference
+        elif direction.CollisionSide.RIGHT in predicted_collision:
+            difference = self.model.rect.right - predicted_collision[direction.CollisionSide.BOTTOM].get_rect().left
+            self.model.position.x += difference
+        if len([key for key in predicted_collision.keys()]) > 0:
+            return True
+        return False
+
+    def update(self):
+        """ collects the relevant collisions and makes appropriate modifications to the physics_model """
+        self.handle_predicted_collision()
+        self.handle_collision()
+
+
+class PhysicsHandler(HandlerTemplate):
+    def __init__(self, model: PhysicsModelGeneric, context: Context) -> None:
+        self.model = model
+        self.context = context
+
+
+    def apply_physics(self):
+        self.model.velocity += self.model.acceleration * self.context.dt
+        self.model.position += self.model.velocity * self.context.dt
+
+
+    def update(self):
+        self.apply_physics()
 
 
 class PhysicsController(controller_template.ControllerTemplate):

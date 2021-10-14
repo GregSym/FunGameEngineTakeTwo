@@ -1,7 +1,7 @@
 # Import standard modules.
 try:
     from enginebits.camera import Camera
-    from enginebits.settings.setup import pyGameSetup
+    from enginebits.settings import pyGameSetup
     from enginebits.player import Player
     from enginebits.physics_model_generic import PhysicsModelGeneric
     from enginebits.floor import Floor
@@ -11,7 +11,7 @@ try:
     from enginebits.scene import Layer
 except ModuleNotFoundError:
     from gamethonic.enginebits.camera import Camera
-    from gamethonic.enginebits.settings.setup import pyGameSetup
+    from gamethonic.enginebits.settings import pyGameSetup
     from gamethonic.enginebits.player import Player
     from gamethonic.enginebits.physics_model_generic import PhysicsModelGeneric
     from gamethonic.enginebits.floor import Floor

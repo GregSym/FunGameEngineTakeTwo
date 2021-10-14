@@ -1,20 +1,20 @@
 import dataclasses
 if __name__ == "__main__":
-    from events.action import Action
+    from events import Action
     from models.physics import WorldPhysics
     import scene
 else:
     try:
-        from .events.action import Action
+        from .events import Action
         from .models.physics import WorldPhysics
         from . import scene
     except ImportError:
         try:
-            from events.action import Action  # in the specific case where context is accessed relatively
+            from events import Action  # in the specific case where context is accessed relatively
             from models.physics import WorldPhysics
             import scene
         except ModuleNotFoundError:
-            from gamethonic.enginebits.events.action import Action  # in the specific case where context is accessed relatively
+            from gamethonic.enginebits.events import Action  # in the specific case where context is accessed relatively
             from gamethonic.enginebits.models.physics import WorldPhysics
             from gamethonic.enginebits import scene
 
