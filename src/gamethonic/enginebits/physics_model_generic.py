@@ -43,11 +43,20 @@ class PhysicsModelGeneric:
     """ Position of the top left-hand corner of the associated sprite """
     dimensions: Vector2 = Vector2(50, 50)
     velocity: Vector2 = Vector2(0, 0)
+    max_velocity: Vector2 = Vector2(300, 300)
     acceleration: Vector2 = Vector2(0, 0)
     has_gravity: bool = False
     smooth_physics: bool = True
     """ smooths off the phsx bouncing effects """
     has_collision: bool = False
+
+    @classmethod
+    def from_rect(cls, rect: Rect):
+        """ sets a physics model from a given rect type object """
+        return cls(
+            position=Vector2(rect.topleft),
+            dimensions=Vector2(rect.width, rect.height)
+        )
 
     @property
     def rect(self):
@@ -115,6 +124,7 @@ class PhysicsModelGeneric:
 
 @dataclass
 class CollisionInteraction:
+    on_collision: Optional[Callable[..., Any]] = None
     on_vertical_collision: Optional[Callable[..., Any]] = None
     on_horizontal_collision: Optional[Callable[..., Any]] = None
     on_bottom_collision: Optional[Callable[..., Any]] = None
@@ -159,7 +169,12 @@ class CollisionHandler(HandlerTemplate):
                 return False
             function()
             return True
-        if (direction.CollisionSide.BOTTOM or direction.CollisionSide.TOP) in (collisions := self.get_current_collision()).keys():
+
+        if len((collisions := self.get_current_collision()).keys()) == 0:
+            return
+
+        handle_null(function=self.on_collision.on_collision)
+        if (direction.CollisionSide.BOTTOM or direction.CollisionSide.TOP) in collisions.keys():
             handle_null(function=self.on_collision.on_vertical_collision)
             if direction.CollisionSide.BOTTOM in collisions:
                 handle_null(function=self.on_collision.on_bottom_collision)
@@ -175,20 +190,21 @@ class CollisionHandler(HandlerTemplate):
     def handle_predicted_collision(self):
         """ handler for when predicted collisions are detected, based on the physics of the item """
         if direction.CollisionSide.BOTTOM in (predicted_collision := self.get_predicted_collision()):
-            difference = self.model.rect.bottom - predicted_collision[direction.CollisionSide.BOTTOM].get_rect().top
-            self.model.position.y += difference
+            difference = self.model.rect.bottom - predicted_collision[direction.CollisionSide.BOTTOM].get_rect().top - 100
+            self.model.max_velocity.y += difference if difference > 5 else 0
         elif direction.CollisionSide.TOP in predicted_collision:
-            difference = self.model.rect.top - predicted_collision[direction.CollisionSide.BOTTOM].get_rect().bottom
-            self.model.position.y += difference
+            difference = self.model.rect.top - predicted_collision[direction.CollisionSide.TOP].get_rect().bottom - 100
+            self.model.max_velocity.y += difference if difference > 5 else 0
         elif direction.CollisionSide.LEFT in predicted_collision:
-            difference = self.model.rect.left - predicted_collision[direction.CollisionSide.BOTTOM].get_rect().right
-            self.model.position.x += difference
+            difference = self.model.rect.left - predicted_collision[direction.CollisionSide.LEFT].get_rect().right
+            self.model.max_velocity.x += difference
         elif direction.CollisionSide.RIGHT in predicted_collision:
-            difference = self.model.rect.right - predicted_collision[direction.CollisionSide.BOTTOM].get_rect().left
-            self.model.position.x += difference
-        if len([key for key in predicted_collision.keys()]) > 0:
-            return True
-        return False
+            difference = self.model.rect.right - predicted_collision[direction.CollisionSide.RIGHT].get_rect().left
+            self.model.max_velocity.x += difference
+        if len([key for key in predicted_collision.keys()]) == 0:
+            self.model.max_velocity = Vector2(300, 300)
+            return False
+        return True
 
     def update(self):
         """ collects the relevant collisions and makes appropriate modifications to the physics_model """
@@ -203,10 +219,66 @@ class PhysicsHandler(HandlerTemplate):
 
     def apply_physics(self):
         self.model.velocity += self.model.acceleration * self.context.dt
-        self.model.position += self.model.velocity * self.context.dt
+        # remember to keep the directional stuff straight (or backwards, depending)
+        velocity_directions = Vector2(self.model.velocity.x / abs(self.model.velocity.x) if self.model.velocity.x != 0 else 0,
+                                      self.model.velocity.y / abs(self.model.velocity.y) if self.model.velocity.y != 0 else 0)
+        # split pos into x, y additions because of min operation
+        # if the vel is 0 then the direction is 0 so we can just let that sort itself out
+        self.model.position += Vector2(
+            velocity_directions.x * min(abs(self.model.velocity.x * self.context.dt), self.model.max_velocity.x),
+            velocity_directions.y * min(abs(self.model.velocity.y * self.context.dt), self.model.max_velocity.y))
 
     def update(self):
         self.apply_physics()
+
+
+class PhysicsControllerTwo(controller_template.ControllerTemplate):
+    """ Take two of physics controllers using handlers """
+
+    def __init__(self, context: Context, physics_model: PhysicsModelGeneric = PhysicsModelGeneric()) -> None:
+        self.context = context
+        self.physics_model = physics_model
+        self.handlers: list[HandlerTemplate] = [
+            CollisionHandler(model=self.physics_model,
+                             target='env', context=self.context,
+                             on_collision=CollisionInteraction(on_vertical_collision=self.on_vertical_collision,
+                                                               on_horizontal_collision=self.on_horizontal_collision,
+                                                               on_bottom_collision=self.on_bottom_collision,
+                                                               on_top_collision=self.on_top_collision,
+                                                               on_left_collision=self.on_left_collision,
+                                                               on_right_collision=self.on_right_collision))]
+        self.physics_handler = PhysicsHandler(model=self.physics_model, context=self.context)
+        self.handlers.append(self.physics_handler)
+
+    def update(self):
+        for handler in self.handlers:
+            handler.update()
+
+    def on_vertical_collision(self):
+        if self.physics_model.smooth_physics:
+            if self.physics_model.acceleration.y >= self.physics_model.velocity.y:
+                self.physics_model.velocity.y = 0
+            else:
+                self.physics_model.velocity.y = self.physics_model.velocity.y * \
+                    (-.9)
+        else:
+            self.physics_model.velocity.y = self.physics_model.velocity.y * \
+                (-.9)
+
+    def on_horizontal_collision(self):
+        pass
+
+    def on_bottom_collision(self):
+        pass
+
+    def on_top_collision(self):
+        pass
+
+    def on_right_collision(self):
+        pass
+
+    def on_left_collision(self):
+        pass
 
 
 class PhysicsController(controller_template.ControllerTemplate):
