@@ -177,6 +177,7 @@ class CollisionHandler(HandlerTemplate):
         if (direction.CollisionSide.BOTTOM or direction.CollisionSide.TOP) in collisions.keys():
             handle_null(function=self.on_collision.on_vertical_collision)
             if direction.CollisionSide.BOTTOM in collisions:
+                self.model.position.y = collisions[direction.CollisionSide.BOTTOM].get_rect().top - self.model.rect.height
                 handle_null(function=self.on_collision.on_bottom_collision)
             elif direction.CollisionSide.TOP in collisions:
                 handle_null(function=self.on_collision.on_top_collision)
@@ -256,7 +257,7 @@ class PhysicsControllerTwo(controller_template.ControllerTemplate):
 
     def on_vertical_collision(self):
         if self.physics_model.smooth_physics:
-            if self.physics_model.acceleration.y >= self.physics_model.velocity.y:
+            if 100 >= self.physics_model.velocity.y:
                 self.physics_model.velocity.y = 0
             else:
                 self.physics_model.velocity.y = self.physics_model.velocity.y * \
