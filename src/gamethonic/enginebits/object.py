@@ -1,7 +1,7 @@
 
 if __name__ == "__main__":
     from templates.object_template import ObjectTemplate
-    from physics_model_generic import PhysicsModelGeneric, PhysicsControllerTwo
+    from physics_model_generic import PhysicsModelGeneric, PhysicsController
     import context
     from models.collision import CollisionEvent
 else:

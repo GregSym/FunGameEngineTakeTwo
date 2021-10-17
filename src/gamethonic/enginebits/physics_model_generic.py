@@ -1,18 +1,12 @@
 """ physics model and controller schemes for GameObjects to depend on """
 
-from collections import deque
 from typing import Any, Callable, Optional
-import numpy as np
 import pygame
 from pygame.rect import Rect
 try:
-    from .models.collision import CollisionKeys, CollisionState
-    from enginebits.templates.object_template import ObjectTemplate
     from enginebits.templates import HandlerTemplate
     from enginebits.context import Context
 except ModuleNotFoundError:
-    from gamethonic.enginebits.models.collision import CollisionKeys, CollisionState
-    from gamethonic.enginebits.templates.object_template import ObjectTemplate
     from gamethonic.enginebits.templates import HandlerTemplate
     from gamethonic.enginebits.context import Context
 

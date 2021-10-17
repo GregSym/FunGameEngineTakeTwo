@@ -3,7 +3,6 @@ from gamethonic.enginebits.physics_model_generic import PhysicsController, Physi
 
 from dataclasses import dataclass
 from datetime import timedelta
-from gamethonic.enginebits.physics_model_generic import PlayerPhysics
 from gamethonic.enginebits.events.action import Action
 from gamethonic.enginebits.templates import HandlerTemplate
 
@@ -155,7 +154,7 @@ class PlayerHandler(HandlerTemplate):
 
     def input(self):
         self.get_events()
-    
+
     def update(self):
         self.get_events()
 
