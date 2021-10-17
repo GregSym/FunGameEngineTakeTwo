@@ -1,10 +1,11 @@
 from gamethonic.enginebits.context import Context
-from gamethonic.enginebits.physics_model_generic import PhysicsModelGeneric
+from gamethonic.enginebits.physics_model_generic import PhysicsController, PhysicsModelGeneric
 
 from dataclasses import dataclass
 from datetime import timedelta
 from gamethonic.enginebits.physics_model_generic import PlayerPhysics
 from gamethonic.enginebits.events.action import Action
+from gamethonic.enginebits.templates import HandlerTemplate
 
 from pygame import event
 import pygame
@@ -46,13 +47,20 @@ class ControllerState:
     right_down_left_up: bool = False
 
 
-class PlayerController(PlayerPhysics):
+class PlayerController(PhysicsController):
+    def __init__(self, context: Context, physics_model: PhysicsModelGeneric = PhysicsModelGeneric()) -> None:
+        super().__init__(context, physics_model=physics_model)
+        self.handlers.insert(0, PlayerHandler(context=self.context, model=self.physics_model))
+
+
+class PlayerHandler(HandlerTemplate):
     """
         Controller for a player character
     """
 
-    def __init__(self, context: Context, physics_model: PhysicsModelGeneric, max_velocity_x: float = 70) -> None:
-        super().__init__(context=context, physics_model=physics_model)
+    def __init__(self, context: Context, model: PhysicsModelGeneric, max_velocity_x: float = 70) -> None:
+        self.context = context
+        self.model = model
         self.max_velocity_x = max_velocity_x
         self.acceleration_chunk: float = 200
         # default deceleration due to the virtual friction of the ground
@@ -77,14 +85,14 @@ class PlayerController(PlayerPhysics):
             Has direction changed during the horizontal motion functional call
              - Returns True in between button press and acceleration past 0_.s-1
         """
-        if self.acceleration_chunk * self.physics_model.velocity.x < 0:
+        if self.acceleration_chunk * self.model.velocity.x < 0:
             return True
         else:
             return False
 
-    def __reset_physics_x(self):
-        self.physics_model.velocity.x = 0
-        self.physics_model.acceleration.x = 0
+    def __reset_x(self):
+        self.model.velocity.x = 0
+        self.model.acceleration.x = 0
         self.state.is_moving = False
 
     def __set_direction(self, direction: str):
@@ -102,51 +110,53 @@ class PlayerController(PlayerPhysics):
         self.__set_direction(direction=direction)
         if self.directionChanged():
             print("Direction changed!")
-        if abs(self.physics_model.velocity.x) <= self.max_velocity_x:
-            self.physics_model.acceleration.x = self.acceleration_chunk
+        if abs(self.model.velocity.x) <= self.max_velocity_x:
+            self.model.acceleration.x = self.acceleration_chunk
         elif self.directionChanged():
-            self.physics_model.acceleration.x = self.acceleration_chunk
+            self.model.acceleration.x = self.acceleration_chunk
         else:
-            self.physics_model.acceleration.x = 0
+            self.model.acceleration.x = 0
 
     def __move_horizontal_keyup(self, direction: str):
 
         # def __private_test_decel():
-        #     if self.physics_model.velocity.x >= 0:
-        #         self.physics_model.velocity.x -= self.acceleration_chunk
+        #     if self.model.velocity.x >= 0:
+        #         self.model.velocity.x -= self.acceleration_chunk
         #     else:
-        #         self.physics_model.velocity.x = 0
+        #         self.model.velocity.x = 0
 
-        if self.acceleration_chunk * self.physics_model.velocity.x >= 0:  # if acc. is still in the same direction
+        if self.acceleration_chunk * self.model.velocity.x >= 0:  # if acc. is still in the same direction
             # as vel. then reset the physics for now
             # self.context.actions.append(Action.do_until(
             #     action=lambda:  __private_test_decel(), duration=timedelta(seconds=2)))
-            self.__reset_physics_x()
+            self.__reset_x()
 
     def __jump_keydown(self):
         def _jump():
-            self.physics_model.acceleration.y = -400
+            self.model.acceleration.y = -400
 
         def _slow_fall():
-            self.physics_model.acceleration.y = self.context.physics.gravity_constant / 2
+            self.model.acceleration.y = self.context.physics.gravity_constant / 2
 
         if self.state.is_grounded:
             print('doing the jump?')
-            self.physics_model.acceleration.y = -400
+            self.model.acceleration.y = -400
             self.state.is_grounded = False
             self.context.add_action(action=Action.do_after_delay(action=_slow_fall, delay=timedelta(seconds=0.5)))
         else:
-            self.physics_model.acceleration.y = self.context.physics.gravity_constant / 2
+            self.model.acceleration.y = self.context.physics.gravity_constant / 2
             print('else being called')
 
     def __jump_keyup(self):
-        self.physics_model.acceleration.y = self.context.physics.gravity_constant
+        self.model.acceleration.y = self.context.physics.gravity_constant
 
     def set_jump(self):
         self.state.is_grounded = True
 
     def input(self):
-        super().input()
+        self.get_events()
+    
+    def update(self):
         self.get_events()
 
     def get_events(self):

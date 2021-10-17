@@ -7,18 +7,18 @@ if __name__ == "__main__":
 else:
     try:
         from .templates.object_template import ObjectTemplate
-        from .physics_model_generic import PhysicsModelGeneric, PhysicsControllerTwo
+        from .physics_model_generic import PhysicsModelGeneric, PhysicsController
         from .models.collision import CollisionEvent
         from . import context
     except ImportError:
         try:
             from templates.object_template import ObjectTemplate
-            from physics_model_generic import PhysicsModelGeneric, PhysicsControllerTwo
+            from physics_model_generic import PhysicsModelGeneric, PhysicsController
             from models.collision import CollisionEvent
             import context
         except ModuleNotFoundError:
             from gamethonic.enginebits.templates.object_template import ObjectTemplate
-            from gamethonic.enginebits.physics_model_generic import PhysicsModelGeneric, PhysicsControllerTwo
+            from gamethonic.enginebits.physics_model_generic import PhysicsModelGeneric, PhysicsController
             from gamethonic.enginebits.models.collision import CollisionEvent
             from gamethonic.enginebits import context
 
@@ -55,7 +55,7 @@ class Object(ObjectTemplate):
         self.setup()
 
     def setup(self):
-        self.controller = PhysicsControllerTwo(context=self.context, physics_model=self.physics_model)
+        self.controller = PhysicsController(context=self.context, physics_model=self.physics_model)
         self.sprite = Surface(size=self.physics_model.dimensions)
         self.sprite.fill(color=(255, 0, 0))
         self.rect = self.sprite.get_rect()
