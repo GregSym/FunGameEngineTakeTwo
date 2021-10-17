@@ -135,9 +135,7 @@ class CollisionInteraction:
 
 class CollisionHandler(HandlerTemplate):
     def __init__(self,
-                 model: PhysicsModelGeneric,
-                 target: str,
-                 context: Context,
+                 context: Context, model: PhysicsModelGeneric, target: str,
                  on_collision: CollisionInteraction = CollisionInteraction()) -> None:
         self.model = model
         self.on_collision = on_collision
@@ -214,7 +212,7 @@ class CollisionHandler(HandlerTemplate):
 
 
 class PhysicsHandler(HandlerTemplate):
-    def __init__(self, model: PhysicsModelGeneric, context: Context) -> None:
+    def __init__(self, context: Context, model: PhysicsModelGeneric) -> None:
         self.model = model
         self.context = context
 
