@@ -71,7 +71,14 @@ class EventLoopMultithreadedDraw(EventLoopImplementation):
 
 
 class EventLoopAsync(EventLoopItem):
+    async def update(self):
+        return super().update()
+
+    async def draw(self):
+        return super().draw()
+
     async def loop_logic(self):
+        """ the main loop logic to be repeated """
         await self.update()
         await self.draw()
 
@@ -81,6 +88,7 @@ class EventLoopAsync(EventLoopItem):
             await self.loop_logic()
 
     def run(self):
+        """ Runs the main program using an asynchronous loop """
         self.setup()
         loop = asyncio.get_event_loop()
         asyncio.ensure_future(self.loop_logic())
