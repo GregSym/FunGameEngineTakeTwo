@@ -13,7 +13,10 @@ def test_actions_factory():
     assert event1_do_now.update()
     event2 = Action.do_at_time(action=lambda: print(
         "time"), time=datetime.time(hour=1, minute=2, second=8))
-    assert (not event2.update()) or (datetime.datetime.now().time() == datetime.time(hour=1, minute=2, second=8) and event2.update())
+    if datetime.datetime.now().time() == datetime.time(hour=1, minute=2, second=8):
+        assert event2.update()
+    else:
+        assert not event2.update()
     event3 = Action.do_after_delay(action=lambda: print(
         "delayed"), delay=datetime.timedelta(seconds=2))
     assert not event3.update()
