@@ -139,7 +139,7 @@ class PlayerHandler(HandlerTemplate):
         def _slow_fall():
             self.model.acceleration.y = self.context.physics.gravity_constant / 2
 
-        jump = ContinuousActionImplementation(context=Context)
+        jump = ContinuousActionImplementation(context=self.context)
         jump.run_with_updates_declarative(init_action=_jump, during_action=_slow_fall)
 
     def __jump_keyup(self):
