@@ -46,6 +46,24 @@ class ControllerState:
     right_down_left_up: bool = False
 
 
+class DoJump:
+    def __init__(self, context: Context, model: PhysicsModelGeneric) -> None:
+        self.context = context
+        self.model = model
+        self.model.acceleration.y = -400
+        self.held_cycles = 0
+        self.context.actions.append(Action.do_until_condition(action=self.update, condition=self.action_end))
+    
+    def update(self):
+        if self.held_cycles == 0:
+            self.held_cycles += 1
+            return
+        self.model.acceleration.y = self.context.physics.gravity_constant / 2
+    
+    def action_end(self) -> bool:
+        """ returns True when the action is intended to cease """
+
+
 class PlayerController(PhysicsController):
     def __init__(self, context: Context, physics_model: PhysicsModelGeneric = PhysicsModelGeneric()) -> None:
         super().__init__(context, physics_model=physics_model)
