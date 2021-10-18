@@ -131,6 +131,7 @@ class PlayerHandler(HandlerTemplate):
             self.__reset_x()
 
     def __jump_keydown(self):
+        self.state.is_jumping = True
         def _jump():
             self.model.acceleration.y = -400
 
@@ -138,12 +139,13 @@ class PlayerHandler(HandlerTemplate):
             self.model.acceleration.y = self.context.physics.gravity_constant / 2
 
         def _grounded():
-            return CollisionSide.BOTTOM in self.model.collision
+            return CollisionSide.BOTTOM in self.model.collision or not self.state.is_jumping
 
         jump = ContinuousActionImplementation(context=self.context)
         jump.run_with_updates_declarative(init_action=_jump, during_action=_slow_fall, terminators=_grounded)
 
     def __jump_keyup(self):
+        self.state.is_jumping = False
         self.model.acceleration.y = self.context.physics.gravity_constant
 
     def set_jump(self):

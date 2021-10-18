@@ -60,6 +60,7 @@ class ContinuousActionImplementation(ContinuouActionTemplate):
             self.held_cycles += 1
             init_action()
         conditions: list[Callable[..., bool]] = [self.action_is_done]
-        [conditions.append(terminator) for terminator in terminators.values()]
+        for terminator in terminators.values():
+            conditions.append(terminator)
         self.context.add_action(action=Action.do_until_condition(
             action=during_action, condition=lambda _=None: any([condition() for condition in conditions])))
