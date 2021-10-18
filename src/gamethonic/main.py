@@ -8,6 +8,7 @@ from gamethonic.enginebits import Floor
 from gamethonic.enginebits import Object
 from gamethonic.enginebits import Context, SurfaceInfo
 from gamethonic.enginebits import AppTemplate
+from gamethonic.enginebits import EventLoopAsync
 
 # Import non-standard modules.
 import pygame
@@ -48,6 +49,26 @@ class MainApp(AppTemplate):
             # NOTE: .tick method returns milliseconds, hence /1000
             self.context.dt = self.context.clock.tick(self.context.fps) / 1000
             print(self.context.dt)
+
+
+class MainAppAsync(EventLoopAsync):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def setup(self):
+        dt, fps, clock, screen = pyGameSetup()
+        self.context: Context = Context(
+            fps=fps, dt=dt, clock=clock, screen=screen, surface_info=SurfaceInfo(
+                width=640, height=480),
+            events=event.get(), actions=[], scene={})
+
+    def start(self):
+        """ triggers the run method """
+        self.run()
+
+    async def loop_logic(self):
+        await super().loop_logic()
+        self.context.dt = self.context.clock.tick(self.context.fps) / 1000
 
 
 class Engine(MainApp):

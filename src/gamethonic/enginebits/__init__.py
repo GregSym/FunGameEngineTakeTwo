@@ -8,6 +8,7 @@ try:
     from enginebits.object import Object
     from enginebits.context import Context, SurfaceInfo
     from enginebits.templates.main_template import AppTemplate
+    from enginebits.templates import EventLoopAsync
     from enginebits.scene import Layer
 except ModuleNotFoundError:
     from gamethonic.enginebits.camera import Camera
@@ -18,9 +19,10 @@ except ModuleNotFoundError:
     from gamethonic.enginebits.object import Object
     from gamethonic.enginebits.context import Context, SurfaceInfo
     from gamethonic.enginebits.templates.main_template import AppTemplate
+    from gamethonic.enginebits.templates import EventLoopAsync
     from gamethonic.enginebits.scene import Layer
 
 
 __all__ = ['Camera', 'Layer', 'pyGameSetup', 'Player',
            'PhysicsModelGeneric', 'Floor', 'Object', 'Context', 'SurfaceInfo',
-           'AppTemplate']
+           'AppTemplate', 'EventLoopAsync']

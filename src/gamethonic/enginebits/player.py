@@ -35,9 +35,6 @@ else:
         from gamethonic.enginebits.player_controller import PlayerController
 
 
-import numpy as np
-
-
 class Player(Object):
     def __init__(self,
                  context: Context,
@@ -49,11 +46,4 @@ class Player(Object):
             context=self.context, physics_model=self.physics_model)  # set a controller
 
     def collision_interacting_event(self):
-        self.controller.get_events()
-
-    def update_controller_collisions(self, angle: float):
-        if angle == np.pi / 2:
-            self.controller.state.is_grounded = True
-
-    def reset_controller_collisions(self):
-        self.controller.state.is_grounded = False
+        self.controller.update()
