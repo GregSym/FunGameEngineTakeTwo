@@ -6,6 +6,8 @@ physics model and controller schemes for GameObjects to depend on
 from typing import Any, Callable, Optional
 import pygame
 from pygame.rect import Rect
+
+from gamethonic.enginebits.templates import ObjectTemplate
 try:
     from enginebits.templates import HandlerTemplate
     from enginebits.context import Context
@@ -26,7 +28,7 @@ else:
             from gamethonic.enginebits.templates import controller_template
 
 from gamethonic.enginebits.functions import direction
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pygame.math import Vector2
 
 
@@ -46,6 +48,7 @@ class PhysicsModelGeneric:
     smooth_physics: bool = True
     """ smooths off the phsx bouncing effects """
     has_collision: bool = False
+    collision: dict[direction.CollisionSide, ObjectTemplate] = field(default_factory=dict)
 
     @classmethod
     def from_rect(cls, rect: Rect):
@@ -168,6 +171,8 @@ class CollisionHandler(HandlerTemplate):
 
         if len((collisions := self.get_current_collision()).keys()) == 0:
             return
+        
+        self.model.collision = collisions
 
         handle_null(function=self.on_collision.on_collision)
         if (direction.CollisionSide.BOTTOM or direction.CollisionSide.TOP) in collisions.keys():
