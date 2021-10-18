@@ -52,7 +52,8 @@ class DoJump:
         self.model = model
         self.model.acceleration.y = -400
         self.held_cycles = 0
-        self.context.actions.append(Action.do_until_condition(action=self.update, condition=self.action_end))
+        self.done = False
+        """ variable tracking completion of button press """
     
     def update(self):
         if self.held_cycles == 0:
@@ -60,8 +61,25 @@ class DoJump:
             return
         self.model.acceleration.y = self.context.physics.gravity_constant / 2
     
-    def action_end(self) -> bool:
+    def action_is_done(self) -> bool:
         """ returns True when the action is intended to cease """
+        return self.done
+    
+    def init_action(self):
+        """ action that gets run on initial keypress """
+    
+    def during_action(self):
+        """ Action that gets run between the downpress and the release """
+    
+    def end_action(self):
+        """ Action to call on the release of the key / keyup event """
+        self.done = True
+    
+    def implementation_rough(self):
+        if self.held_cycles == 0:
+            self.held_cycles += 1
+            self.init_action()
+        self.context.add_action(action=Action.do_until_condition(action=self.during_action, condition=self.action_is_done))
 
 
 class PlayerController(PhysicsController):
