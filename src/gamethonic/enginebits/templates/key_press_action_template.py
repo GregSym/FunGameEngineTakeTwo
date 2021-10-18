@@ -6,7 +6,7 @@ from gamethonic.enginebits.events import Action
 
 class ContinuouActionTemplate(abc.ABC):
     """ A rough outline of a class that uses the events.Action class to avoid turning on the special
-        event handler mode that allows pygame to register held keypresses, as it behaves weirdly and 
+        event handler mode that allows pygame to register held keypresses, as it behaves weirdly and
         has lots of warnings
     """
 
@@ -22,7 +22,7 @@ class ContinuouActionTemplate(abc.ABC):
         """
 
     @abc.abstractmethod
-    def run_with_updates_declarative(self):
+    def run_with_updates_declarative(self, init_action: Callable[..., Any], during_action: Callable[..., Any]):
         """ a version of run with updates that accepts functions to run, rather than allowing an override of extent methods
             of this class
         """

@@ -35,9 +35,6 @@ else:
         from gamethonic.enginebits.player_controller import PlayerController
 
 
-import numpy as np
-
-
 class Player(Object):
     def __init__(self,
                  context: Context,

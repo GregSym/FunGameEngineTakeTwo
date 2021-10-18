@@ -2,15 +2,12 @@ from gamethonic.enginebits.context import Context
 from gamethonic.enginebits.physics_model_generic import PhysicsController, PhysicsModelGeneric
 
 from dataclasses import dataclass
-from datetime import timedelta
-from gamethonic.enginebits.events.action import Action
 from gamethonic.enginebits.templates import HandlerTemplate
 from gamethonic.enginebits.templates.key_press_action_template import ContinuousActionImplementation
 
 from pygame import event
 import pygame
 from typing import Any, Callable
-
 
 
 @dataclass
