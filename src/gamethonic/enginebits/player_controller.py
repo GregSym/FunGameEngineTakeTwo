@@ -1,3 +1,4 @@
+from gamethonic.enginebits.functions import CollisionSide
 from gamethonic.enginebits.context import Context
 from gamethonic.enginebits.physics_model_generic import PhysicsController, PhysicsModelGeneric
 
@@ -136,8 +137,11 @@ class PlayerHandler(HandlerTemplate):
         def _slow_fall():
             self.model.acceleration.y = self.context.physics.gravity_constant / 2
 
+        def _grounded():
+            return CollisionSide.BOTTOM in self.model.collision
+
         jump = ContinuousActionImplementation(context=self.context)
-        jump.run_with_updates_declarative(init_action=_jump, during_action=_slow_fall)
+        jump.run_with_updates_declarative(init_action=_jump, during_action=_slow_fall, terminators=_grounded)
 
     def __jump_keyup(self):
         self.model.acceleration.y = self.context.physics.gravity_constant

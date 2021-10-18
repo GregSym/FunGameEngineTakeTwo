@@ -171,7 +171,7 @@ class CollisionHandler(HandlerTemplate):
 
         if len((collisions := self.get_current_collision()).keys()) == 0:
             return
-        
+
         self.model.collision = collisions
 
         handle_null(function=self.on_collision.on_collision)

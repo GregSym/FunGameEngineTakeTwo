@@ -55,8 +55,11 @@ class ContinuousActionImplementation(ContinuouActionTemplate):
             self.init_action()
         self.context.add_action(action=Action.do_until_condition(action=self.during_action, condition=self.action_is_done))
 
-    def run_with_updates_declarative(self, init_action: Callable[..., Any], during_action: Callable[..., Any]):
+    def run_with_updates_declarative(self, init_action: Callable[..., Any], during_action: Callable[..., Any], **terminators: Callable[..., bool]):
         if self.held_cycles == 0:
             self.held_cycles += 1
             init_action()
-        self.context.add_action(action=Action.do_until_condition(action=during_action, condition=self.action_is_done))
+        conditions: list[Callable[..., bool]] = [self.action_is_done]
+        [conditions.append(terminator) for terminator in terminators.values()]
+        self.context.add_action(action=Action.do_until_condition(
+            action=during_action, condition=lambda _=None: any([condition() for condition in conditions])))
