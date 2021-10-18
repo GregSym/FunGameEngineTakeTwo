@@ -1,6 +1,6 @@
 from gamethonic.enginebits.functions import CollisionSide
 from gamethonic.enginebits.context import Context
-from gamethonic.enginebits.physics_model_generic import PhysicsController, PhysicsModelGeneric, PlayerPhysics
+from gamethonic.enginebits.physics_model_generic import PhysicsModelGeneric, PlayerPhysics
 
 from dataclasses import dataclass
 from gamethonic.enginebits.templates import HandlerTemplate
@@ -132,6 +132,7 @@ class PlayerHandler(HandlerTemplate):
 
     def __jump_keydown(self):
         self.state.is_jumping = True
+
         def _jump():
             self.model.acceleration.y = -40000
 
