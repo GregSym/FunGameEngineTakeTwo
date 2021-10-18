@@ -5,10 +5,12 @@ from dataclasses import dataclass
 from datetime import timedelta
 from gamethonic.enginebits.events.action import Action
 from gamethonic.enginebits.templates import HandlerTemplate
+from gamethonic.enginebits.templates.key_press_action_template import ContinuousActionImplementation
 
 from pygame import event
 import pygame
 from typing import Any, Callable
+
 
 
 @dataclass
@@ -44,42 +46,6 @@ class ControllerState:
     right_down: bool = True
     left_down_right_up: bool = False
     right_down_left_up: bool = False
-
-
-class DoJump:
-    def __init__(self, context: Context, model: PhysicsModelGeneric) -> None:
-        self.context = context
-        self.model = model
-        self.model.acceleration.y = -400
-        self.held_cycles = 0
-        self.done = False
-        """ variable tracking completion of button press """
-    
-    def update(self):
-        if self.held_cycles == 0:
-            self.held_cycles += 1
-            return
-        self.model.acceleration.y = self.context.physics.gravity_constant / 2
-    
-    def action_is_done(self) -> bool:
-        """ returns True when the action is intended to cease """
-        return self.done
-    
-    def init_action(self):
-        """ action that gets run on initial keypress """
-    
-    def during_action(self):
-        """ Action that gets run between the downpress and the release """
-    
-    def end_action(self):
-        """ Action to call on the release of the key / keyup event """
-        self.done = True
-    
-    def implementation_rough(self):
-        if self.held_cycles == 0:
-            self.held_cycles += 1
-            self.init_action()
-        self.context.add_action(action=Action.do_until_condition(action=self.during_action, condition=self.action_is_done))
 
 
 class PlayerController(PhysicsController):
@@ -173,14 +139,8 @@ class PlayerHandler(HandlerTemplate):
         def _slow_fall():
             self.model.acceleration.y = self.context.physics.gravity_constant / 2
 
-        if self.state.is_grounded:
-            print('doing the jump?')
-            self.model.acceleration.y = -400
-            self.state.is_grounded = False
-            self.context.add_action(action=Action.do_after_delay(action=_slow_fall, delay=timedelta(seconds=0.5)))
-        else:
-            self.model.acceleration.y = self.context.physics.gravity_constant / 2
-            print('else being called')
+        jump = ContinuousActionImplementation(context=Context)
+        jump.run_with_updates_declarative(init_action=_jump, during_action=_slow_fall)
 
     def __jump_keyup(self):
         self.model.acceleration.y = self.context.physics.gravity_constant
