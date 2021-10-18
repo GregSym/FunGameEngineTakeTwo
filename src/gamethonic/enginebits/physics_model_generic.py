@@ -1,4 +1,7 @@
-""" physics model and controller schemes for GameObjects to depend on """
+"""
+# Physics Model, Controller & Handler
+physics model and controller schemes for GameObjects to depend on
+"""
 
 from typing import Any, Callable, Optional
 import pygame
@@ -137,6 +140,7 @@ class CollisionHandler(HandlerTemplate):
         self.context = context
 
     def get_collision(self, rect: Rect):
+        """ higher-level get collision that composes lower functions as part of handler's update """
         return direction.PhysxCalculations.get_collision(
             rect=rect, target_rects={
                 id: layer for (id, layer) in self.context.scene.items() if id == self.target
@@ -249,7 +253,7 @@ class PhysicsController(controller_template.ControllerTemplate):
 
     def on_vertical_collision(self):
         if self.physics_model.smooth_physics:
-            if 100 >= self.physics_model.velocity.y:
+            if 200 >= self.physics_model.velocity.y:
                 self.physics_model.velocity.y = 0
             else:
                 self.physics_model.velocity.y = self.physics_model.velocity.y * \
