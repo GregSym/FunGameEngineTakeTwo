@@ -1,6 +1,6 @@
 # FunGameEngineTakeTwo
 
-![test_program](https://github.com/GregSym/FunGameEngineTakeTwo/actions/workflows/test-suite.yml/badge.svg)
+![test_suite](https://github.com/GregSym/FunGameEngineTakeTwo/actions/workflows/test-suite.yml/badge.svg)
 
 
 <p>
