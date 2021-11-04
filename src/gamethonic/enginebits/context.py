@@ -57,8 +57,9 @@ class Context:
     def add_action(self, action: Action):
         """ Adds an actions to the context.actions list to be executed as instructed as part of the event loop """
         self.actions.append(action)
-    
+
     @property
     def grid(self) -> Generator[Rect, None, None]:
         """ A quick grid layout based on grid rules in world meta (TODO: make that) """
-        return LayoutManipulation.grid_from_container(self.screen, grid_width=10, grid_height=10)
+        _grid: Generator[Rect, None, None] = LayoutManipulation.grid_from_container(self.screen, grid_width=10, grid_height=10)
+        return _grid
