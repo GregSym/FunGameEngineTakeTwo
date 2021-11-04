@@ -9,8 +9,16 @@
   little tedious (and probably a bad idea anyway)
 </p>
 
+# Experimentation
+
+I've started to include a bunch of experimental implementations of games / frontends using the engine
+
+Use of these is currently done by installing gamethonic to an environment and then coping the experimentation folder to that
+environment.
+
 <h1> Devices: </h1>
 
 <p> The ones I've tested </p>
 
 <li> Windows 10 </li>
+<li> Ubuntu (WSL + Azure/GH-Actions Server) </li>
