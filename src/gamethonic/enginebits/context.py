@@ -1,4 +1,5 @@
 import dataclasses
+from typing import Generator
 
 from layout_manipulation import LayoutManipulation
 if __name__ == "__main__":
@@ -58,6 +59,6 @@ class Context:
         self.actions.append(action)
     
     @property
-    def grid(self) -> list[Rect]:
+    def grid(self) -> Generator[Rect, None, None]:
         """ A quick grid layout based on grid rules in world meta (TODO: make that) """
         return LayoutManipulation.grid_from_container(self.screen, grid_width=10, grid_height=10)
