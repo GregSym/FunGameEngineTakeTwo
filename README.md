@@ -9,11 +9,30 @@
   little tedious (and probably a bad idea anyway)
 </p>
 
+# Installation
+
+* You are adviced to setup a virtual environment of your choice (windows example below)
+```
+python -m pip install virtualenv
+python -m virtualenv venv
+.\venv\Scripts\activate
+```
+Key Linux/bash difference:
+```
+source ./venv/bin/activate
+```
+
+* currently you can get the package via installation from the gh
+repo directly
+```
+python -m pip install git:github.com/GregSym/FunGameEngineTakeTwo
+```
+
 # Experimentation
 
 I've started to include a bunch of experimental implementations of games / frontends using the engine
 
-Use of these is currently done by installing gamethonic to an environment and then coping the experimentation folder to that
+Use of these is currently done by installing gamethonic to an environment and then copying the experimentation folder to that
 environment.
 
 <h1> Devices: </h1>
