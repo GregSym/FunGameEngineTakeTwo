@@ -21,6 +21,7 @@ Key Linux/bash difference:
 ```
 source ./venv/bin/activate
 ```
+Conda environments should work too, but are untested.
 
 * currently you can get the package via installation from the gh
 repo directly
