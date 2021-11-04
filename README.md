@@ -29,6 +29,18 @@ repo directly
 python -m pip install git:github.com/GregSym/FunGameEngineTakeTwo
 ```
 
+# Running the Engine
+## The most basic engine setup:
+
+```
+from gamethonic import Engine
+
+
+engine = Engine()
+# make your modifications at this point
+engine.run()
+```
+
 # Experimentation
 
 I've started to include a bunch of experimental implementations of games / frontends using the engine
