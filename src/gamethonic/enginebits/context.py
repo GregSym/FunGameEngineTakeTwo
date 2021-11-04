@@ -23,7 +23,8 @@ else:
 
 from pygame.time import Clock
 from pygame.surface import Surface
-from pygame import Rect, event
+from pygame import event
+from pygame.rect import Rect
 
 # NOTE: some of this may well run better with dicts, apparently, but I don't get
 # linting from that so...no. Well, maybe later, actually
