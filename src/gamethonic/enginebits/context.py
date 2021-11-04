@@ -61,5 +61,6 @@ class Context:
     @property
     def grid(self) -> Generator[Rect, None, None]:
         """ A quick grid layout based on grid rules in world meta (TODO: make that) """
-        _grid: Generator[Rect, None, None] = LayoutManipulation.grid_from_container(self.screen, grid_width=10, grid_height=10)
+        _grid: Generator[Rect, None, None] = LayoutManipulation.grid_from_container(
+            container_rect=self.screen.get_rect(), grid_width=10, grid_height=10)
         return _grid
