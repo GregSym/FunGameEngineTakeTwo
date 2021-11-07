@@ -1,14 +1,15 @@
 from gamethonic import Engine
-from gamethonic.enginebits import Layer
+from gamethonic.enginebits import Layer, PhysicsModelGeneric
 from pc_snake import Snake
 from food import Food
 
 
 def snake():
     engine = Engine()
+    engine.setup()
     engine.context.scene = {
-        "snake": Layer(objects=[Snake()]),
-        "food": Layer(objects=[Food()]),
+        "snake": Layer(objects=[Snake(context=engine.context)]),
+        "food": Layer(objects=[Food(context=engine.context, physics_model=PhysicsModelGeneric())]),
         "env": Layer(objects=[])
     }
     engine.run()

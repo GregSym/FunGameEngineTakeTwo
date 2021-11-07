@@ -26,8 +26,8 @@ class Snake:
         self.context = context
         self.grid = list(self.context.grid)
         self.starting_position: Rect = self.grid[random.randint(0, len(self.grid))]
-        self.segments.append(SnakeSegment(physics_model=PhysicsModelGeneric(position=Vector2(self.starting_position.topleft))))
+        self.segments.append(SnakeSegment(context=self.context, physics_model=PhysicsModelGeneric(position=Vector2(self.starting_position.topleft))))
         self.controller: ControllerTemplate = SnakeController()
 
     def elongate(self):
-        self.segments.append(SnakeSegment())
+        self.segments.append(SnakeSegment(context=self.context, physics_model=PhysicsModelGeneric()))
