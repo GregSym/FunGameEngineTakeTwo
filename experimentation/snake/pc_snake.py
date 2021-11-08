@@ -16,6 +16,9 @@ class SnakeSegment(Object):
 class SnakeController(ControllerTemplate):
     def __init__(self) -> None:
         super().__init__()
+    
+    def update(self):
+        pass
 
 
 class Snake(Object):
@@ -25,7 +28,7 @@ class Snake(Object):
     """ segments of the snek """
 
     def __init__(self, context: Context) -> None:
-        self.context = context
+        super().__init__(context=context, physics_model=PhysicsModelGeneric())
         self.grid = list(self.context.grid)
         self.starting_position: Rect = self.grid[random.randint(0, len(self.grid))]
         self.segments.append(

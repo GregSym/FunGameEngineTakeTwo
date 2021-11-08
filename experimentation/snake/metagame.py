@@ -1,6 +1,6 @@
 from gamethonic.enginebits import Context
-from gamethonic.enginebits.meta import MetaGame
-from meta.metagame_interfaces import RuleInterface
+from gamethonic.enginebits import MetaGame
+from gamethonic.enginebits.meta import RuleInterface
 import rules as rls
 
 

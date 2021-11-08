@@ -58,7 +58,7 @@ class Object(ObjectTemplate):
     @classmethod
     def of(cls, context: context.Context):
         """ return an instance of this type of GameObject from the Game's Context """
-        instances_of_type = [context_object for context_object in context.objects if Type[context_object] == cls]
+        instances_of_type = [context_object for context_object in context.objects if type(context_object) == cls]
         return instances_of_type[0]
 
     def setup(self):

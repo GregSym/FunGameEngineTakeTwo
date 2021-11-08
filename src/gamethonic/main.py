@@ -22,6 +22,7 @@ import sys
 class MainApp(AppTemplate):
     def __init__(self) -> None:
         super().__init__()
+        self.setup()
 
     def setup(self):
         dt, fps, clock, screen = pyGameSetup()
@@ -42,7 +43,6 @@ class MainApp(AppTemplate):
         print(self.context.dt)
 
     def run(self):
-        self.setup()
         print("fps is:", self.context.fps)
         while True:
             self.update()
