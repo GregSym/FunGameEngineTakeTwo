@@ -61,7 +61,6 @@ class Object(ObjectTemplate):
         instances_of_type = [context_object for context_object in context.objects if Type[context_object] == cls]
         return instances_of_type[0]
 
-
     def setup(self):
         self.controller = PhysicsController(context=self.context, physics_model=self.physics_model)
         self.sprite = Surface(size=self.physics_model.dimensions)

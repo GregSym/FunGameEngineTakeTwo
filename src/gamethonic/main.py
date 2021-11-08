@@ -114,7 +114,7 @@ class Engine(MainApp):
         for layer in self.context.scene.values():
             for object in layer.objects:
                 object.update()
-        
+
         self.metagame.update()
 
         self.camera.update()

@@ -66,7 +66,7 @@ class Context:
         _grid: Generator[Rect, None, None] = LayoutManipulation.grid_from_container(
             container_rect=self.screen.get_rect(), grid_width=10, grid_height=10)
         return _grid
-    
+
     @property
     def objects(self) -> Generator[ObjectTemplate, None, None]:
         """ A generator based shortcut for all GameObjects in a context """
