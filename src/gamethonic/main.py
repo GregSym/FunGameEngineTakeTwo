@@ -9,6 +9,7 @@ from gamethonic.enginebits import Object
 from gamethonic.enginebits import Context, SurfaceInfo
 from gamethonic.enginebits import AppTemplate
 from gamethonic.enginebits import EventLoopAsync
+from gamethonic.enginebits import MetaGame
 
 # Import non-standard modules.
 import pygame
@@ -72,6 +73,10 @@ class MainAppAsync(EventLoopAsync):
 
 
 class Engine(MainApp):
+    """
+        A game engine for handling full scenes of game objects
+        and applying physics rules and event handlers upon such things
+    """
 
     def __init__(self) -> None:
         super().__init__()
@@ -84,6 +89,7 @@ class Engine(MainApp):
         self.context.scene['env'] = Layer(objects=[Floor(
             context=self.context, physics_model=PhysicsModelGeneric(position=Vector2(0, 300)))])
         self.camera = Camera(context=self.context)
+        self.metagame: MetaGame = MetaGame()
 
     def update(self):
         """
@@ -108,6 +114,8 @@ class Engine(MainApp):
         for layer in self.context.scene.values():
             for object in layer.objects:
                 object.update()
+        
+        self.metagame.update()
 
         self.camera.update()
 
