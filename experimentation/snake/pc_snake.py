@@ -6,6 +6,8 @@ from gamethonic.enginebits.templates import ControllerTemplate
 from gamethonic.enginebits import PhysicsModelGeneric
 import random
 
+from gamethonic.enginebits.templates import ObjectTemplate
+
 
 class SnakeSegment(Object):
     """ GameObject repr for segments of the snek """
@@ -16,7 +18,7 @@ class SnakeController(ControllerTemplate):
         super().__init__()
 
 
-class Snake:
+class Snake(ObjectTemplate):
     """ A repr of the player's snek """
 
     segments = []
@@ -26,7 +28,8 @@ class Snake:
         self.context = context
         self.grid = list(self.context.grid)
         self.starting_position: Rect = self.grid[random.randint(0, len(self.grid))]
-        self.segments.append(SnakeSegment(context=self.context, physics_model=PhysicsModelGeneric(position=Vector2(self.starting_position.topleft))))
+        self.segments.append(
+            SnakeSegment(context=self.context, physics_model=PhysicsModelGeneric(position=Vector2(self.starting_position.topleft))))
         self.controller: ControllerTemplate = SnakeController()
 
     def elongate(self):
