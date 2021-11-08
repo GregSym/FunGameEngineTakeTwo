@@ -29,6 +29,7 @@ except ModuleNotFoundError:
     from gamethonic.enginebits.functions.direction import PhysxCalculations
     from gamethonic.enginebits.models.collision import CollisionKeys
 
+from typing import Type
 from pygame.constants import QUIT
 from pygame import Surface
 from pygame.rect import Rect
@@ -53,6 +54,13 @@ class Object(ObjectTemplate):
         self.context = context
         self.physics_model = physics_model
         self.setup()
+
+    @classmethod
+    def of(cls, context: context.Context):
+        """ return an instance of this type of GameObject from the Game's Context """
+        instances_of_type = [context_object for context_object in context.objects if Type[context_object] == cls]
+        return instances_of_type[0]
+
 
     def setup(self):
         self.controller = PhysicsController(context=self.context, physics_model=self.physics_model)
