@@ -18,10 +18,10 @@ class SnakeController(ControllerTemplate):
         super().__init__()
 
 
-class Snake(ObjectTemplate):
+class Snake(Object):
     """ A repr of the player's snek """
 
-    segments = []
+    segments: list[ObjectTemplate] = []
     """ segments of the snek """
 
     def __init__(self, context: Context) -> None:

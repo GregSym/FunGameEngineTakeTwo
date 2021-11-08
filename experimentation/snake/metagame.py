@@ -1,12 +1,13 @@
 from gamethonic.enginebits import Context
-import pc_snake
-import food
+from gamethonic.enginebits.meta import MetaGame
+from meta.metagame_interfaces import RuleInterface
+import rules as rls
 
 
-class SnakeMetaGame:
+class SnakeMetaGame(MetaGame):
 
-
-    def __init__(self, context: Context) -> None:
+    def __init__(self, context: Context, rules: list[RuleInterface] = []) -> None:
+        super().__init__(rules=rules)
         self.context = context
-        self.snake: pc_snake.Snake = pc_snake.Snake.of(context=self.context)
-        self.food: food.Food = food.Food.of(context=self.context)
+        self.rules = [
+            rls.FoodRule(context=self.context)]
