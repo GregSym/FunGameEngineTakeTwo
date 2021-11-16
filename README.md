@@ -11,7 +11,7 @@
 
 # Installation
 
-* You are adviced to setup a virtual environment of your choice (windows example below)
+* You are advised to setup a virtual environment of your choice (windows example below)
 ```
 python -m pip install virtualenv
 python -m virtualenv venv
