@@ -29,7 +29,6 @@ except ModuleNotFoundError:
     from gamethonic.enginebits.functions.direction import PhysxCalculations
     from gamethonic.enginebits.models.collision import CollisionKeys
 
-from typing import Type
 from pygame.constants import QUIT
 from pygame import Surface
 from pygame.rect import Rect
