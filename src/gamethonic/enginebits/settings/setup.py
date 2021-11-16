@@ -27,7 +27,6 @@ def pyGameSetup() -> tuple[float, int, pygame.time.Clock, surface.Surface]:
         os.environ["SDL_VIDEODRIVER"] = "dummy"
         screen = display.set_mode((width, height))
 
-
     # screen is the surface representing the window.
     # PyGame surfaces can be thought of as screen sections that you can draw onto.
     # You can also draw surfaces onto other surfaces, rotate surfaces, and transform surfaces.
