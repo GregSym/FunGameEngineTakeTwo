@@ -48,6 +48,14 @@ I've started to include a bunch of experimental implementations of games / front
 Use of these is currently done by installing gamethonic to an environment and then copying the experimentation folder to that
 environment.
 
+<h1> Roadmap: </h1>
+<li> A finished product involves incorporating the engine into a graphical frontend so that it can be used as exactly that - an engine </li>
+<li> The immediate goal is to mock up some more examples with which to drive engine development </li>
+
+<h2> Some fun extras under consideration </h2>
+<li> Ultimately, an abstraction for plugging in Neural Networks would be a cool place to go and a lot of the required abstractions are already in place </li>
+<li> A built in UI layout toolkit for python that uses declarative language </li>
+
 <h1> Devices: </h1>
 
 <p> The ones I've tested </p>
