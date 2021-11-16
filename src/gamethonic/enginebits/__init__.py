@@ -10,6 +10,7 @@ try:
     from enginebits.templates.main_template import AppTemplate
     from enginebits.templates import EventLoopAsync
     from enginebits.scene import Layer
+    from enginebits.meta import MetaGame
 except ModuleNotFoundError:
     from gamethonic.enginebits.camera import Camera
     from gamethonic.enginebits.settings import pyGameSetup
@@ -21,8 +22,9 @@ except ModuleNotFoundError:
     from gamethonic.enginebits.templates.main_template import AppTemplate
     from gamethonic.enginebits.templates import EventLoopAsync
     from gamethonic.enginebits.scene import Layer
+    from gamethonic.enginebits.meta import MetaGame
 
 
 __all__ = ['Camera', 'Layer', 'pyGameSetup', 'Player',
            'PhysicsModelGeneric', 'Floor', 'Object', 'Context', 'SurfaceInfo',
-           'AppTemplate', 'EventLoopAsync']
+           'AppTemplate', 'EventLoopAsync', 'MetaGame']

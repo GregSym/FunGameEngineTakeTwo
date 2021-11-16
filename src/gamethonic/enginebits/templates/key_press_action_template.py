@@ -23,7 +23,7 @@ class ContinuouActionTemplate(abc.ABC):
 
     @abc.abstractmethod
     def run_with_updates_declarative(self, init_action: Callable[..., Any], during_action: Callable[..., Any]):
-        """ a version of run with updates that accepts functions to run, rather than allowing an override of extent methods
+        """ a version of run with updates that accepts functions to run, rather than allowing an override of extant methods
             of this class
         """
 

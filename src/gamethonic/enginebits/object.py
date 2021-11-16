@@ -54,6 +54,12 @@ class Object(ObjectTemplate):
         self.physics_model = physics_model
         self.setup()
 
+    @classmethod
+    def of(cls, context: context.Context):
+        """ return an instance of this type of GameObject from the Game's Context """
+        instances_of_type = [context_object for context_object in context.objects if type(context_object) == cls]
+        return instances_of_type[0]
+
     def setup(self):
         self.controller = PhysicsController(context=self.context, physics_model=self.physics_model)
         self.sprite = Surface(size=self.physics_model.dimensions)

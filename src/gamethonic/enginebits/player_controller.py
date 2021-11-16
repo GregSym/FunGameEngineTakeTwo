@@ -131,6 +131,8 @@ class PlayerHandler(HandlerTemplate):
             self.__reset_x()
 
     def __jump_keydown(self):
+        if CollisionSide.BOTTOM not in self.model.collision:
+            return
         self.state.is_jumping = True
 
         def _jump():
