@@ -11,6 +11,9 @@ class MetaGame(Protocol):
         in this particular abstraction but it should be possible to do, from
         a design goal perspective
     """
+    score: int = 0
+    """ returns score as evaluated by the metagame """
+    level: int = 0
 
-    def checkEventsList(self):
-        ...
+    def update(self):
+        """ update evaluation of the MetaGame """
