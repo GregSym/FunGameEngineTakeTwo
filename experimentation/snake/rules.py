@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-import context
 from gamethonic.enginebits import Context
 import pc_snake
 import food
