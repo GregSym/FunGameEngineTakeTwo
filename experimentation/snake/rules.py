@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from gamethonic.enginebits import Context
 import pc_snake
 import food
@@ -12,9 +12,11 @@ class SnakeRule(ABC):
         self.snake: pc_snake.Snake = pc_snake.Snake.of(context=self.context)
         self.food: food.Food = food.Food.of(context=self.context)
 
+    @abstractmethod
     def rule_has_event(self) -> bool:
         """ does this rule have an event to act upon """
 
+    @abstractmethod
     def on_rule_applicable(self):
         """ action to perform when rule_has_event returns True """
 
@@ -34,9 +36,17 @@ class FoodRule(SnakeRule):
         self.food.place()
 
 
-class OurourobosRule:
+class OurourobosRule(SnakeRule):
     """ Rule for when the snake hits itself """
 
+    def rule_has_event(self) -> bool:
+        for segment in self.snake.segments[1:]:
+            if self.snake.segments[0] == segment:
+                return True
+        return False
+    
+    def on_rule_applicable(self):
+        self.snake.reset()  # implement generic snake game reset
 
 class BoundaryRule:
     """ Rule for when snek hits the wall (this needs attachment to game state)
