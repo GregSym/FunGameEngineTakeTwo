@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import context
 from gamethonic.enginebits import Context
 import pc_snake
 import food
@@ -48,9 +49,16 @@ class OurourobosRule(SnakeRule):
     def on_rule_applicable(self):
         self.snake.reset()  # implement generic snake game reset
 
-class BoundaryRule:
+class BoundaryRule(SnakeRule):
     """ Rule for when snek hits the wall (this needs attachment to game state)
         states:
         - Kills the snake
         - Snek wraps around the board
     """
+
+    def rule_has_event(self) -> bool:
+        """ returns true when segments[0] is outside of grid """
+        return self.snake.segments[0] not in self.context.grid
+
+    def on_rule_applicable(self):
+        self.snake.reset()  # implement generic snake game reset
