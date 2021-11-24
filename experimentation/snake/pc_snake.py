@@ -7,6 +7,20 @@ from gamethonic.enginebits import PhysicsModelGeneric
 import random
 
 from gamethonic.enginebits.templates import ObjectTemplate
+from gamethonic.enginebits.templates import HandlerTemplate
+
+
+class SnakeMovementHandler(HandlerTemplate):
+
+    def __init__(self, context: Context) -> None:
+        self.context = context
+        self.direction = Vector2(1, 1)
+        self.cell_size = self.context.grid_cell_size
+
+    def update(self):
+        self.next_cell = Vector2(self.cell_size * self.direction.x,
+                                 self.cell_size * self.direction.y)
+        
 
 
 class SnakeSegment(Object):
@@ -16,7 +30,7 @@ class SnakeSegment(Object):
 class SnakeController(ControllerTemplate):
     def __init__(self) -> None:
         super().__init__()
-    
+
     def update(self):
         pass
 

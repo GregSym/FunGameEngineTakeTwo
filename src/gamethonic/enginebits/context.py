@@ -1,4 +1,5 @@
 import dataclasses
+import itertools
 from typing import Generator
 
 from gamethonic.enginebits.functions import LayoutManipulation
@@ -26,6 +27,7 @@ from pygame.time import Clock
 from pygame.surface import Surface
 from pygame import event
 from pygame.rect import Rect
+from pygame.math import Vector2
 
 # NOTE: some of this may well run better with dicts, apparently, but I don't get
 # linting from that so...no. Well, maybe later, actually
@@ -66,6 +68,13 @@ class Context:
         _grid: Generator[Rect, None, None] = LayoutManipulation.grid_from_container(
             container_rect=self.screen.get_rect(), grid_width=10, grid_height=10)
         return _grid
+
+    @property
+    def grid_cell_size(self) -> float:
+        """ returns the magnitude of cells size in the grid, if present """
+        for cell1, cell2 in zip(self.grid, itertools.islice(self.grid, 1)):
+            return Vector2(abs(cell2.left - cell1.left),
+                           abs(cell2.top - cell1.top)).magnitude()
 
     @property
     def objects(self) -> Generator[ObjectTemplate, None, None]:

@@ -10,4 +10,6 @@ class SnakeMetaGame(MetaGame):
         super().__init__(rules=rules)
         self.context = context
         self.rules = [
-            rls.FoodRule(context=self.context)]
+            rls.FoodRule(context=self.context),
+            rls.OurourobosRule(context=self.context),
+            rls.BoundaryRule(context=self.context)]
